@@ -9,4 +9,5 @@ Dockerfile
 README.md
 .env.local
 .env
-
+.logs
+.env.*

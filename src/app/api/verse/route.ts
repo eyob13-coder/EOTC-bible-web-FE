@@ -30,7 +30,6 @@ export async function GET(req: NextRequest) {
         // Optimization: Cache this mapping? For now, scan.
 
         let foundBook = null;
-        let foundContent = "";
 
         for (const file of files) {
             if (!file.endsWith(".json")) continue;
