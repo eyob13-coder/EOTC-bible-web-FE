@@ -30,7 +30,7 @@ export function AppSidebar() {
   }
 
   const handleBookClick = (book: bookType) => {
-    const newRef = { book: book.book_name_en, chapter: 1, verse: 1 }
+    const newRef = { book: book.book_name_en, chapter: 1, verseStart: 1, verseCount: 1 }
     setCurrent(newRef)
     const bookId = book.book_name_en.toLowerCase().replace(/ /g, '-')
     router.push(`/read-online/${bookId}/1`)
@@ -40,7 +40,7 @@ export function AppSidebar() {
     const selectedBook = books.find((b) => b.book_name_en === current.book)
     if (selectedBook) {
       const bookId = selectedBook.book_name_en.toLowerCase().replace(/ /g, '-')
-      const newRef = { book: selectedBook.book_name_en, chapter: chapter, verse: 1 }
+      const newRef = { book: selectedBook.book_name_en, chapter: chapter, verseStart: 1, verseCount: 1 }
       setCurrent(newRef)
       router.push(`/read-online/${bookId}/${chapter}`)
     }
@@ -66,8 +66,8 @@ export function AppSidebar() {
             <SidebarMenuItem className="m-0 w-full p-0">
               <SidebarMenuButton
                 className={`w-max cursor-pointer rounded-none border border-[#C8C8C8] px-2 py-2 text-sm font-medium hover:bg-[#392D2D] hover:text-[#FFFDF8] md:px-3 md:py-3 ${selectedTestament === 'old'
-                    ? 'bg-[#392D2D] text-[#FFFDF8]'
-                    : 'bg-[#FFFDF8] text-[#1A1A19]'
+                  ? 'bg-[#392D2D] text-[#FFFDF8]'
+                  : 'bg-[#FFFDF8] text-[#1A1A19]'
                   }`}
                 onClick={() => {
                   setSelectedTestament('old')
@@ -83,8 +83,8 @@ export function AppSidebar() {
             <SidebarMenuItem className="m-0 w-full p-0">
               <SidebarMenuButton
                 className={`w-max cursor-pointer rounded-none border border-[#C8C8C8] px-2 py-2 text-sm font-medium hover:bg-[#392D2D] hover:text-[#FFFDF8] md:px-3 md:py-3 ${selectedTestament === 'new'
-                    ? 'bg-[#392D2D] text-[#FFFDF8]'
-                    : 'border border-[#C8C8C8] bg-[#FFFDF8] text-[#1A1A19]'
+                  ? 'bg-[#392D2D] text-[#FFFDF8]'
+                  : 'border border-[#C8C8C8] bg-[#FFFDF8] text-[#1A1A19]'
                   }`}
                 onClick={() => {
                   setSelectedTestament('new')
@@ -117,8 +117,8 @@ export function AppSidebar() {
                   <SidebarMenuItem key={book.book_number}>
                     <SidebarMenuButton
                       className={`rounded-none p-4 py-5 text-base ${current.book === book.book_name_am
-                          ? 'bg-[#F2EFE8] text-[#1A1A19]'
-                          : 'bg-[#FFFDF6] hover:bg-[#F2EFE8] hover:text-[#1A1A19]'
+                        ? 'bg-[#F2EFE8] text-[#1A1A19]'
+                        : 'bg-[#FFFDF6] hover:bg-[#F2EFE8] hover:text-[#1A1A19]'
                         }`}
                       onClick={() => handleBookClick(book)}
                     >
@@ -145,8 +145,8 @@ export function AppSidebar() {
                         <SidebarMenuItem key={chapter} className="mx-1 w-full">
                           <SidebarMenuButton
                             className={`rounded-none p-4 py-5 text-base ${isSelected
-                                ? 'bg-[#F2EFE8] text-[#1A1A19]'
-                                : 'bg-[#FFFDF6] hover:bg-[#F2EFE8] hover:text-[#1A1A19]'
+                              ? 'bg-[#F2EFE8] text-[#1A1A19]'
+                              : 'bg-[#FFFDF6] hover:bg-[#F2EFE8] hover:text-[#1A1A19]'
                               }`}
                             onClick={() => handleChapterClick(chapter)}
                           >

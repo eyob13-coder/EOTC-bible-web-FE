@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
 import { useHighlightsStore } from '@/stores/highlightsStore'
 import { Trash2, FilePenLine, ExternalLink, PencilLine } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -19,7 +18,6 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function HighlightsClient() {
-    const t = useTranslations('Highlights') // Assuming you have translations, or fallback to hardcoded for now if not
     const { highlights, loadHighlights, removeHighlight, isLoading } = useHighlightsStore()
     const router = useRouter()
     const [selected, setSelected] = useState<string[]>([])

@@ -35,7 +35,7 @@ export function generateStaticParams() {
   return supportedLocales.locales.map((locale) => ({ locale }))
 }
 
-export async function generateMetadata(props: Omit<Props, 'children'>) {
+export async function generateMetadata() {
   const locale = await getLocaleFromCookie()
 
   // Specify the namespace for translations
