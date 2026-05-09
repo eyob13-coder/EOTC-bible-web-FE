@@ -9,21 +9,16 @@ const Hero = () => {
   const t = useTranslations('Hero')
 
   return (
-    <section
-      className="relative min-h-screen w-full text-white"
-      style={{
-        backgroundImage: 'url(/hero-image.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'top',
-      }}
-    >
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(to top, rgba(127, 29, 29, 0.9) 0%, rgba(127, 29, 29, 0.7) 28%, transparent 100%)',
-        }}
-      ></div>
+    <section className="relative min-h-screen w-full text-white overflow-hidden">
+      <Image 
+        src="/hero-image.png" 
+        alt="Hero Background" 
+        fill 
+        priority 
+        className="object-cover object-top -z-20"
+        sizes="100vw"
+      />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[rgba(127,29,29,0.9)] via-[rgba(127,29,29,0.7)] via-28% to-transparent"></div>
       <div className="relative container mx-auto flex h-full min-h-[766px] flex-col justify-center px-4">
         <div className="mt-48 w-full text-left md:absolute md:top-[319px] md:left-[48px] md:mt-0 md:w-[554px]">
           <p className="inline-block rounded-full bg-[#4C0E0F]/30 px-3 text-sm text-red-100">

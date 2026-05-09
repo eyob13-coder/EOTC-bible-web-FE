@@ -46,6 +46,7 @@ const Feature: React.FC<FeatureProps> = ({ title, description, image, link, reve
           width={546}
           height={405}
           className="h-full w-full rounded-lg object-cover shadow-lg"
+          sizes="(max-width: 768px) 100vw, 546px"
         />
       </div>
     </div>

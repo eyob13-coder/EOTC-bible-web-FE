@@ -8,17 +8,14 @@ const DownloadApp = () => {
 
   return (
     <section id="download" className="relative overflow-hidden bg-gray-50 dark:bg-neutral-900 py-20">
-      <div
-        className="absolute inset-0 -rotate-33 transform bg-cover bg-center md:rotate-0"
-        style={{ backgroundImage: "url('/download-app-card-bg.png')" }}
-      ></div>
+      <div className="absolute inset-0 -rotate-33 transform md:rotate-0 -z-10 overflow-hidden">
+        <Image src="/download-app-card-bg.png" alt="Download Card Background" fill className="object-cover object-center" sizes="100vw" />
+      </div>
       <div className="relative container mx-auto flex items-center justify-center px-4">
         <div className="flex h-auto w-full max-w-[1449px] items-center justify-center md:h-[410px]">
           <div className="relative flex h-auto w-full max-w-[859px] items-center justify-center md:h-[386px]">
-            <div
-              className="flex h-auto w-full max-w-[859px] flex-col items-start justify-between rounded-[15px] bg-cover bg-center p-4 pb-0 md:h-[305px] md:flex-row md:justify-start md:p-0"
-              style={{ backgroundImage: "url('/download-bg.png')" }}
-            >
+            <div className="relative flex h-auto w-full max-w-[859px] flex-col items-start justify-between rounded-[15px] p-4 pb-0 md:h-[305px] md:flex-row md:justify-start md:p-0 overflow-hidden">
+              <Image src="/download-bg.png" alt="Download Background" fill className="object-cover object-center -z-10" sizes="(max-width: 768px) 100vw, 859px" />
               <div className="h-auto w-full md:mt-[46px] md:ml-[32px] md:h-[158px] md:w-[455px] md:text-left">
                 <h2 className="text-2xl font-bold text-white md:text-3xl">
                   {t('title')}
@@ -54,6 +51,7 @@ const DownloadApp = () => {
                   width={292}
                   height={386}
                   className="h-[386px] w-[292px]"
+                  sizes="(max-width: 768px) 100vw, 292px"
                 />
               </div>
             </div>

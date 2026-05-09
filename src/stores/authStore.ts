@@ -59,7 +59,7 @@ export const useAuthStore = create<AuthState>()(
         const res = await axiosInstance.get('/api/auth/profile', {
           validateStatus: (status) => status === 200 || status === 401
         })
-        
+
         if (res.status === 401) {
           set({ user: null, isAuthenticated: false, isLoading: false })
           return
