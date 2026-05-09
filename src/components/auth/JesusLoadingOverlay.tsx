@@ -151,7 +151,7 @@ const BirthScene = ({ accent }: { accent: string }) => {
       </g>
 
       {/* ── SAINTS: Mary, Joseph, Wise Men ── brightness-lifted so they pop on dark bg */}
-      <g style={{ filter: 'brightness(8) sepia(0.5) contrast(1.1)' }}>
+      <g style={{ filter: 'brightness(22) sepia(0.4) saturate(2.8) contrast(1.6) drop-shadow(0 0 12px rgba(200,160,80,0.5))' }}>
 
         {/* ── SAINT MARY ── kneeling left of manger, veil draped over head */}
         <g filter="url(#birth-rough)">
@@ -215,6 +215,14 @@ const BirthScene = ({ accent }: { accent: string }) => {
           </g>
         ))}
       </g>{/* end brightness wrapper */}
+
+      {/* ✝ Golden Halos — Ethiopian Orthodox style */}
+      <motion.circle cx="188" cy="528" r="26" fill="none" stroke="#d4a030" strokeWidth="2.5" opacity="0.7"
+        animate={{ opacity: [0.5, 0.9, 0.5], r: [24, 28, 24] }} transition={{ duration: 3, repeat: Infinity }} />
+      <circle cx="188" cy="528" r="24" fill="#d4a030" opacity="0.06" />
+      <motion.circle cx="318" cy="508" r="26" fill="none" stroke="#d4a030" strokeWidth="2.5" opacity="0.65"
+        animate={{ opacity: [0.45, 0.85, 0.45], r: [24, 28, 24] }} transition={{ duration: 3.2, repeat: Infinity }} />
+      <circle cx="318" cy="508" r="24" fill="#d4a030" opacity="0.06" />
     </svg>
   )
 }
@@ -300,7 +308,7 @@ const BaptismScene = ({ accent }: { accent: string }) => {
       ))}
 
       {/* ── ALL FIGURES ── brightness-lifted for visibility */}
-      <g style={{ filter: 'brightness(9) sepia(0.4) contrast(1.1)' }}>
+      <g style={{ filter: 'brightness(22) sepia(0.3) saturate(2.5) contrast(1.5) drop-shadow(0 0 12px rgba(138,180,208,0.45))' }}>
 
         {/* ── JESUS ── standing in Jordan, waist-deep */}
         <g filter="url(#bap-rough)">
@@ -368,6 +376,14 @@ const BaptismScene = ({ accent }: { accent: string }) => {
           </g>
         ))}
       </g>{/* end brightness wrapper */}
+
+      {/* ✝ Golden Halos — Jesus & John the Baptist */}
+      <motion.circle cx="255" cy="375" r="30" fill="none" stroke="#d4a030" strokeWidth="3" opacity="0.75"
+        animate={{ opacity: [0.5, 1, 0.5], r: [28, 33, 28] }} transition={{ duration: 2.8, repeat: Infinity }} />
+      <circle cx="255" cy="375" r="28" fill="#d4a030" opacity="0.08" />
+      <motion.circle cx="310" cy="372" r="26" fill="none" stroke="#c89830" strokeWidth="2" opacity="0.6"
+        animate={{ opacity: [0.4, 0.8, 0.4], r: [24, 28, 24] }} transition={{ duration: 3, repeat: Infinity }} />
+      <circle cx="310" cy="372" r="24" fill="#c89830" opacity="0.05" />
     </svg>
   )
 }
@@ -441,7 +457,7 @@ const MinistryScene = ({ accent }: { accent: string }) => {
       <rect x="0" y="330" width="500" height="370" fill="#040810" opacity="0.75" />
 
       {/* ── ALL FIGURES ── brightness-lifted for visibility */}
-      <g style={{ filter: 'brightness(10) sepia(0.3) contrast(1.2)' }}>
+      <g style={{ filter: 'brightness(24) sepia(0.25) saturate(2.5) contrast(1.5) drop-shadow(0 0 12px rgba(208,200,160,0.45))' }}>
 
         {/* Fishing boat — dark organic shape */}
         <g filter="url(#min-rough)">
@@ -615,7 +631,7 @@ const CrucifixionScene = ({ accent }: { accent: string }) => {
       ))}
 
       {/* ── SAINTS ── brightness-lifted so warm tones pop against black */}
-      <g style={{ filter: 'brightness(14) sepia(0.35) contrast(1.1)' }}>
+      <g style={{ filter: 'brightness(28) sepia(0.35) saturate(3) contrast(1.7) drop-shadow(0 0 14px rgba(154,32,16,0.6))' }}>
 
         {/* ── SAINT MARY (Mother of Jesus) ── kneeling at foot of center cross */}
         <g filter="url(#cru-rough)">
@@ -682,6 +698,14 @@ const CrucifixionScene = ({ accent }: { accent: string }) => {
           <ellipse cx="402" cy="535" rx="10" ry="18" fill="#080000" opacity="0.75" />
         </g>
       </g>{/* end brightness wrapper */}
+
+      {/* ✝ Golden Halos — Mary & John at the Cross */}
+      <motion.circle cx="248" cy="505" r="24" fill="none" stroke="#8a3020" strokeWidth="2.5" opacity="0.6"
+        animate={{ opacity: [0.4, 0.8, 0.4], r: [22, 26, 22] }} transition={{ duration: 3, repeat: Infinity }} />
+      <circle cx="248" cy="505" r="22" fill="#8a3020" opacity="0.06" />
+      <motion.circle cx="195" cy="490" r="24" fill="none" stroke="#8a3020" strokeWidth="2" opacity="0.55"
+        animate={{ opacity: [0.35, 0.75, 0.35], r: [22, 26, 22] }} transition={{ duration: 3.2, repeat: Infinity }} />
+      <circle cx="195" cy="490" r="22" fill="#8a3020" opacity="0.05" />
     </svg>
   )
 }
@@ -830,7 +854,7 @@ const ResurrectionScene = ({ accent }: { accent: string }) => {
       </motion.g>
 
       {/* ── MARY MAGDALENE + GUARDS ── brightness-lifted for visibility */}
-      <g style={{ filter: 'brightness(10) sepia(0.5) contrast(1.1)' }}>
+      <g style={{ filter: 'brightness(22) sepia(0.4) saturate(2.8) contrast(1.6) drop-shadow(0 0 12px rgba(232,200,64,0.45))' }}>
 
         {/* ── MARY MAGDALENE ── approaching tomb, hand raised in amazement */}
         <g filter="url(#res-rough)">
@@ -885,6 +909,8 @@ const GRAIN_B = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(grainB)}`
 
 const SCENE_COMPONENTS = [BirthScene, BaptismScene, MinistryScene, CrucifixionScene, ResurrectionScene]
 
+const GEZZEM = ['፩', '፪', '፫', '፬', '፭']
+
 const FilmScratches = () => {
   const [scratches, setScratches] = useState<{ x: number, h: number, op: number }[]>([])
   useEffect(() => {
@@ -919,24 +945,318 @@ const FilmScratches = () => {
   )
 }
 
+
+// ── Divine floating particles — embers, dust, holy light motes ──
+const DivineParticles = ({ accent, sceneId }: { accent: string; sceneId: string }) => {
+  const count = 35
+  const particles = useRef(
+    Array.from({ length: count }, (_, i) => ({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: 1.5 + Math.random() * 4,
+      dur: 4 + Math.random() * 8,
+      delay: Math.random() * 5,
+      drift: (Math.random() - 0.5) * 30,
+      glow: Math.random() > 0.7,
+    }))
+  ).current
+
+  return (
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+      {particles.map((p, i) => (
+        <motion.div
+          key={`${sceneId}-${i}`}
+          initial={{ opacity: 0, y: `${p.y}%`, x: `${p.x}%` }}
+          animate={{
+            opacity: [0, 0.6 + (p.glow ? 0.35 : 0), 0.3, 0.7, 0],
+            y: [`${p.y}%`, `${p.y - 25 - Math.random() * 30}%`],
+            x: [`${p.x}%`, `${p.x + p.drift}%`],
+          }}
+          transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute',
+            width: p.size,
+            height: p.size,
+            borderRadius: '50%',
+            background: p.glow ? '#fffde8' : accent,
+            boxShadow: p.glow
+              ? `0 0 ${p.size * 3}px ${accent}, 0 0 ${p.size * 6}px ${accent}80`
+              : `0 0 ${p.size * 2}px ${accent}60`,
+            filter: p.glow ? 'blur(0.5px)' : 'none',
+          }}
+        />
+      ))}
+    </div>
+  )
+}
+
+// ── Chromatic aberration — RGB channel split for damaged film look ──
+const ChromaticAberration = () => {
+  const [shift, setShift] = useState({ r: 0, b: 0 })
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (Math.random() < 0.12) {
+        const s = 1 + Math.random() * 2.5
+        setShift({ r: s, b: -s })
+        setTimeout(() => setShift({ r: 0, b: 0 }), 40 + Math.random() * 60)
+      }
+    }, 200)
+    return () => clearInterval(id)
+  }, [])
+
+  if (shift.r === 0) return null
+  return (
+    <>
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'rgba(255,0,0,0.04)',
+        transform: `translateX(${shift.r}px)`,
+        mixBlendMode: 'screen',
+      }} />
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'rgba(0,0,255,0.04)',
+        transform: `translateX(${shift.b}px)`,
+        mixBlendMode: 'screen',
+      }} />
+    </>
+  )
+}
+
+// ── Atmospheric fog — parallax mist layer ──
+const AtmosphericFog = ({ accent }: { accent: string }) => (
+  <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+    <motion.div
+      animate={{ x: ['-5%', '5%', '-5%'], opacity: [0.06, 0.14, 0.06] }}
+      transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+      style={{
+        position: 'absolute', inset: '-10%',
+        background: `radial-gradient(ellipse at 30% 70%, ${accent}18, transparent 60%),
+                     radial-gradient(ellipse at 70% 30%, ${accent}12, transparent 55%)`,
+        filter: 'blur(40px)',
+      }}
+    />
+    <motion.div
+      animate={{ x: ['3%', '-4%', '3%'], y: ['-2%', '2%', '-2%'] }}
+      transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+      style={{
+        position: 'absolute', inset: '-15%',
+        background: `radial-gradient(ellipse at 60% 80%, ${accent}10, transparent 50%)`,
+        filter: 'blur(60px)',
+      }}
+    />
+  </div>
+)
+
+// ── Cinematic letterbox bars ──
+const LetterboxBars = () => (
+  <>
+    <motion.div
+      initial={{ height: 0 }}
+      animate={{ height: '5.5vh' }}
+      transition={{ duration: 1.5, ease: 'easeOut' }}
+      style={{
+        position: 'absolute', top: 0, left: 0, right: 0,
+        background: '#000', zIndex: 20, pointerEvents: 'none',
+      }}
+    />
+    <motion.div
+      initial={{ height: 0 }}
+      animate={{ height: '5.5vh' }}
+      transition={{ duration: 1.5, ease: 'easeOut' }}
+      style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        background: '#000', zIndex: 20, pointerEvents: 'none',
+      }}
+    />
+  </>
+)
+
+// ── Typewriter verse reveal ──
+const TypewriterVerse = ({ text, accent }: { text: string; accent: string }) => {
+  const [charCount, setCharCount] = useState(0)
+  useEffect(() => {
+    setCharCount(0)
+    const id = setInterval(() => {
+      setCharCount(c => {
+        if (c >= text.length) { clearInterval(id); return c }
+        return c + 1
+      })
+    }, 35)
+    return () => clearInterval(id)
+  }, [text])
+
+  return (
+    <span>
+      {text.slice(0, charCount)}
+      {charCount < text.length && (
+        <motion.span
+          animate={{ opacity: [1, 0] }}
+          transition={{ duration: 0.5, repeat: Infinity }}
+          style={{ color: accent }}
+        >|</motion.span>
+      )}
+    </span>
+  )
+}
+
+// ── Animated scene timeline ──
+const SceneTimeline = ({ sceneIndex, accent, total }: { sceneIndex: number; accent: string; total: number }) => {
+  const [progress, setProgress] = useState(0)
+  useEffect(() => {
+    setProgress(0)
+    const start = Date.now()
+    const id = setInterval(() => {
+      const elapsed = Date.now() - start
+      setProgress(Math.min(elapsed / SCENE_DURATION, 1))
+    }, 30)
+    return () => clearInterval(id)
+  }, [sceneIndex])
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 22, justifyContent: 'center' }}>
+      {/* Roman numeral */}
+      <motion.span
+        key={sceneIndex}
+        initial={{ opacity: 0, x: -8 }}
+        animate={{ opacity: 0.5, x: 0 }}
+        style={{
+          fontSize: '0.6rem', color: accent, letterSpacing: '0.15em',
+          fontWeight: 600, marginRight: 4, fontFamily: 'serif',
+        }}
+      >
+        {GEZZEM[sceneIndex]}
+      </motion.span>
+
+      {/* Timeline segments */}
+      <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
+        {Array.from({ length: total }, (_, i) => (
+          <div key={i} style={{
+            width: i === sceneIndex ? 38 : 14,
+            height: 3,
+            borderRadius: 2,
+            background: i < sceneIndex
+              ? `${accent}80`
+              : i === sceneIndex
+                ? 'rgba(255,255,255,0.15)'
+                : 'rgba(255,255,255,0.1)',
+            overflow: 'hidden',
+            position: 'relative',
+            transition: 'width 0.5s ease',
+          }}>
+            {i === sceneIndex && (
+              <motion.div
+                style={{
+                  position: 'absolute', top: 0, left: 0, bottom: 0,
+                  background: accent,
+                  boxShadow: `0 0 8px ${accent}, 0 0 3px ${accent}`,
+                  borderRadius: 2,
+                  width: `${progress * 100}%`,
+                }}
+              />
+            )}
+            {i < sceneIndex && (
+              <div style={{
+                position: 'absolute', inset: 0,
+                background: accent,
+                borderRadius: 2,
+                opacity: 0.7,
+              }} />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Counter */}
+      <motion.span
+        key={`c-${sceneIndex}`}
+        initial={{ opacity: 0, x: 8 }}
+        animate={{ opacity: 0.35, x: 0 }}
+        style={{
+          fontSize: '0.55rem', color: 'rgba(255,255,255,0.5)',
+          letterSpacing: '0.1em', marginLeft: 4, fontFamily: 'monospace',
+        }}
+      >
+        {sceneIndex + 1}/{total}
+      </motion.span>
+    </div>
+  )
+}
+
+// ── Ambient light pulse behind text ──
+const AmbientTextGlow = ({ accent }: { accent: string }) => (
+  <motion.div
+    animate={{
+      opacity: [0.08, 0.2, 0.08],
+      scale: [0.9, 1.1, 0.9],
+    }}
+    transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+    style={{
+      position: 'absolute',
+      width: '120%',
+      height: '180%',
+      top: '-40%',
+      left: '-10%',
+      borderRadius: '50%',
+      background: `radial-gradient(ellipse, ${accent}30 0%, transparent 65%)`,
+      filter: 'blur(30px)',
+      pointerEvents: 'none',
+    }}
+  />
+)
+
 import { useAuthStore } from '@/stores/authStore'
 
+// Minimum display = at least 2 full scenes — enough to showcase the cinematic intro
+// Tune this: use `scenes.length` for full cycle, or `1` for a single scene minimum
+const MIN_DISPLAY_MS = SCENE_DURATION * 2
+
 export default function JesusLoadingOverlay() {
-  const { isLoading: isVisible } = useAuthStore()
+  const { isLoading } = useAuthStore()
   const [sceneIndex, setSceneIndex] = useState(0)
   const [grainPos, setGrainPos] = useState({ ax: 0, ay: 0, bx: 0, by: 0 })
   const [flicker, setFlicker] = useState(1)
   const flickerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
+  // ── Minimum display duration logic ──
+  // When isLoading fires, we lock the overlay open for at least MIN_DISPLAY_MS
+  const [showOverlay, setShowOverlay] = useState(false)
+  const overlayStartRef = useRef<number | null>(null)
+  const pendingDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   useEffect(() => {
-    if (!isVisible) { setSceneIndex(0); return }
+    if (isLoading && !showOverlay) {
+      // Backend started loading → show overlay, record start time
+      setShowOverlay(true)
+      overlayStartRef.current = Date.now()
+      if (pendingDismissRef.current) clearTimeout(pendingDismissRef.current)
+    } else if (!isLoading && showOverlay) {
+      // Backend finished, but ensure minimum display time
+      const elapsed = Date.now() - (overlayStartRef.current ?? Date.now())
+      const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed)
+
+      if (remaining <= 0) {
+        setShowOverlay(false)
+        overlayStartRef.current = null
+      } else {
+        pendingDismissRef.current = setTimeout(() => {
+          setShowOverlay(false)
+          overlayStartRef.current = null
+        }, remaining)
+      }
+    }
+    return () => { if (pendingDismissRef.current) clearTimeout(pendingDismissRef.current) }
+  }, [isLoading, showOverlay])
+
+  useEffect(() => {
+    if (!showOverlay) { setSceneIndex(0); return }
     const interval = setInterval(() => setSceneIndex(i => (i + 1) % scenes.length), SCENE_DURATION)
     return () => clearInterval(interval)
-  }, [isVisible])
+  }, [showOverlay])
 
   // Heavy grain flicker — dual layer, different frequencies
   useEffect(() => {
-    if (!isVisible) return
+    if (!showOverlay) return
     const id = setInterval(() => {
       setGrainPos({
         ax: (Math.random() - 0.5) * 40, ay: (Math.random() - 0.5) * 40,
@@ -944,11 +1264,11 @@ export default function JesusLoadingOverlay() {
       })
     }, 60)
     return () => clearInterval(id)
-  }, [isVisible])
+  }, [showOverlay])
 
   // Projector flicker — random brightness drops
   useEffect(() => {
-    if (!isVisible) return
+    if (!showOverlay) return
     const flick = () => {
       const r = Math.random()
       if (r < 0.08) setFlicker(0.72)
@@ -957,9 +1277,9 @@ export default function JesusLoadingOverlay() {
     }
     flickerRef.current = setInterval(flick, 90)
     return () => { if (flickerRef.current) clearInterval(flickerRef.current) }
-  }, [isVisible])
+  }, [showOverlay])
 
-  if (!isVisible) return null
+  if (!showOverlay) return null
 
   const scene = scenes[sceneIndex]
   const SceneComponent = SCENE_COMPONENTS[sceneIndex]
@@ -1005,6 +1325,12 @@ export default function JesusLoadingOverlay() {
           </motion.div>
         </AnimatePresence>
 
+        {/* ★ NEW — Atmospheric fog with parallax */}
+        <AtmosphericFog accent={scene.accent} />
+
+        {/* ★ NEW — Divine floating particles */}
+        <DivineParticles accent={scene.accent} sceneId={scene.id} />
+
         {/* Color tint overlay — scene mood */}
         <AnimatePresence mode="wait">
           <motion.div key={`tint-${scene.id}`}
@@ -1042,6 +1368,9 @@ export default function JesusLoadingOverlay() {
         {/* Film scratches */}
         <FilmScratches />
 
+        {/* ★ NEW — Chromatic aberration glitch */}
+        <ChromaticAberration />
+
         {/* Deep vignette */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
@@ -1058,35 +1387,54 @@ export default function JesusLoadingOverlay() {
           background: 'linear-gradient(to top, transparent, rgba(0,0,0,0.45))',
         }} />
 
+        {/* ★ NEW — Cinematic letterbox bars */}
+        <LetterboxBars />
+
         {/* UI text */}
         <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 28px', width: '100%', maxWidth: '480px' }}>
-          {/* Ethiopian cross */}
+          {/* ★ NEW — Ambient glow behind text */}
+          <AmbientTextGlow accent={scene.accent} />
+
+          {/* ★ UPGRADED — Ethiopian cross with slow spin */}
           <AnimatePresence mode="wait">
             <motion.div key={`cross-${scene.id}`}
-              initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }}
-              transition={{ duration: 0.7 }}
+              initial={{ opacity: 0, y: -16, rotate: -90 }}
+              animate={{ opacity: 1, y: 0, rotate: 0 }}
+              exit={{ opacity: 0, y: 10, rotate: 90 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               style={{ marginBottom: 14 }}>
-              <svg width="40" height="40" viewBox="0 0 40 40" style={{ display: 'inline-block', filter: 'drop-shadow(0 0 6px ' + scene.accent + ')' }}>
+              <motion.svg
+                width="48" height="48" viewBox="0 0 40 40"
+                animate={{ filter: [`drop-shadow(0 0 4px ${scene.accent})`, `drop-shadow(0 0 12px ${scene.accent})`, `drop-shadow(0 0 4px ${scene.accent})`] }}
+                transition={{ duration: 2.5, repeat: Infinity }}
+                style={{ display: 'inline-block' }}>
                 <rect x="17" y="2" width="6" height="36" rx="1.5" fill={scene.accent} opacity="0.95" />
                 <rect x="2" y="12" width="36" height="6" rx="1.5" fill={scene.accent} opacity="0.95" />
                 <circle cx="20" cy="15" r="5" fill="none" stroke={scene.accent} strokeWidth="1.5" opacity="0.65" />
                 <circle cx="20" cy="15" r="2" fill={scene.accent} opacity="0.5" />
-              </svg>
+                {/* Extra detail: corner diamonds */}
+                <rect x="5" y="5" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 6.5 6.5)" />
+                <rect x="32" y="5" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 33.5 6.5)" />
+                <rect x="5" y="32" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 6.5 33.5)" />
+                <rect x="32" y="32" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 33.5 33.5)" />
+              </motion.svg>
             </motion.div>
           </AnimatePresence>
 
-          {/* Amharic title */}
+          {/* ★ UPGRADED — Amharic title with scale punch */}
           <AnimatePresence mode="wait">
             <motion.div key={`am-${scene.id}`}
-              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -18 }}
-              transition={{ duration: 0.65 }}>
+              initial={{ opacity: 0, y: 24, scale: 0.85 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -18, scale: 1.1 }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
               <div style={{
                 fontFamily: "'Noto Sans Ethiopic', serif",
-                fontSize: 'clamp(2.2rem,6vw,3.2rem)',
+                fontSize: 'clamp(2.4rem,7vw,3.6rem)',
                 fontWeight: 700, lineHeight: 1.1,
                 color: scene.accent,
-                textShadow: `0 0 22px ${scene.accent}, 0 0 50px ${scene.accent}80, 2px 2px 8px rgba(0,0,0,0.95)`,
-                letterSpacing: '0.04em',
+                textShadow: `0 0 28px ${scene.accent}, 0 0 60px ${scene.accent}80, 0 0 90px ${scene.accent}40, 2px 2px 8px rgba(0,0,0,0.95)`,
+                letterSpacing: '0.06em',
                 marginBottom: 4,
               }}>
                 {scene.amharic}
@@ -1097,8 +1445,10 @@ export default function JesusLoadingOverlay() {
           {/* English subtitle */}
           <AnimatePresence mode="wait">
             <motion.div key={`en-${scene.id}`}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}>
+              initial={{ opacity: 0, letterSpacing: '0.5em' }}
+              animate={{ opacity: 1, letterSpacing: '0.28em' }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, delay: 0.1 }}>
               <div style={{
                 fontSize: 'clamp(0.78rem,1.8vw,0.95rem)',
                 fontWeight: 500,
@@ -1112,10 +1462,24 @@ export default function JesusLoadingOverlay() {
             </motion.div>
           </AnimatePresence>
 
-          {/* Divider */}
-          <div style={{ width: 40, height: 1, background: scene.accent, margin: '0 auto 14px', opacity: 0.4 }} />
+          {/* ★ UPGRADED — Animated divider with pulse */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`div-${scene.id}`}
+              initial={{ width: 0, opacity: 0 }}
+              animate={{ width: 55, opacity: 0.5 }}
+              exit={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              style={{
+                height: 1,
+                background: `linear-gradient(90deg, transparent, ${scene.accent}, transparent)`,
+                margin: '0 auto 14px',
+                boxShadow: `0 0 8px ${scene.accent}40`,
+              }}
+            />
+          </AnimatePresence>
 
-          {/* Verse */}
+          {/* ★ UPGRADED — Verse with typewriter effect */}
           <AnimatePresence mode="wait">
             <motion.div key={`verse-${scene.id}`}
               initial={{ opacity: 0, y: 10 }} animate={{ opacity: 0.78, y: 0 }} exit={{ opacity: 0 }}
@@ -1129,33 +1493,25 @@ export default function JesusLoadingOverlay() {
                 lineHeight: 1.55,
                 textShadow: '0 1px 6px rgba(0,0,0,0.9)',
               }}>
-                "{scene.verseText}"
+                &ldquo;<TypewriterVerse text={scene.verseText} accent={scene.accent} />&rdquo;
               </div>
-              <div style={{
-                fontSize: 'clamp(0.6rem,1.4vw,0.7rem)',
-                color: scene.accent,
-                opacity: 0.65,
-                marginTop: 6,
-                letterSpacing: '0.15em',
-              }}>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 0.65 }}
+                transition={{ duration: 0.5, delay: 1.5 }}
+                style={{
+                  fontSize: 'clamp(0.6rem,1.4vw,0.7rem)',
+                  color: scene.accent,
+                  marginTop: 6,
+                  letterSpacing: '0.15em',
+                }}>
                 — {scene.verse}
-              </div>
+              </motion.div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Scene dots */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 22 }}>
-            {scenes.map((_, i) => (
-              <motion.div key={i}
-                animate={{
-                  width: i === sceneIndex ? 20 : 6,
-                  background: i === sceneIndex ? scene.accent : 'rgba(255,255,255,0.25)',
-                  boxShadow: i === sceneIndex ? `0 0 8px ${scene.accent}` : 'none',
-                }}
-                transition={{ duration: 0.4 }}
-                style={{ height: 5, borderRadius: 3 }} />
-            ))}
-          </div>
+          {/* ★ REPLACED — Animated scene timeline with roman numerals + progress */}
+          <SceneTimeline sceneIndex={sceneIndex} accent={scene.accent} total={scenes.length} />
         </div>
       </motion.div>
     </AnimatePresence>,
