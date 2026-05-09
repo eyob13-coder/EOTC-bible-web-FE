@@ -7,16 +7,16 @@ const DownloadApp = () => {
   const t = useTranslations('DownloadApp')
 
   return (
-    <section id="download" className="relative overflow-hidden bg-gray-50 dark:bg-neutral-900 py-20">
-      <div className="absolute inset-0 -rotate-33 transform md:rotate-0 -z-10 overflow-hidden">
+    <section id="download" className="relative overflow-hidden bg-gray-50 dark:bg-black py-20">
+      <div className="absolute inset-0 -rotate-33 transform md:rotate-0 z-0 overflow-hidden dark:hidden">
         <Image src="/download-app-card-bg.png" alt="Download Card Background" fill className="object-cover object-center" sizes="100vw" />
       </div>
-      <div className="relative container mx-auto flex items-center justify-center px-4">
+      <div className="relative z-10 container mx-auto flex items-center justify-center px-4">
         <div className="flex h-auto w-full max-w-[1449px] items-center justify-center md:h-[410px]">
           <div className="relative flex h-auto w-full max-w-[859px] items-center justify-center md:h-[386px]">
             <div className="relative flex h-auto w-full max-w-[859px] flex-col items-start justify-between rounded-[15px] p-4 pb-0 md:h-[305px] md:flex-row md:justify-start md:p-0 overflow-hidden">
-              <Image src="/download-bg.png" alt="Download Background" fill className="object-cover object-center -z-10" sizes="(max-width: 768px) 100vw, 859px" />
-              <div className="h-auto w-full md:mt-[46px] md:ml-[32px] md:h-[158px] md:w-[455px] md:text-left">
+              <Image src="/download-bg.png" alt="Download Background" fill className="object-cover object-center z-0" sizes="(max-width: 768px) 100vw, 859px" />
+              <div className="relative z-10 h-auto w-full md:mt-[46px] md:ml-[32px] md:h-[158px] md:w-[455px] md:text-left">
                 <h2 className="text-2xl font-bold text-white md:text-3xl">
                   Coming Soon
                 </h2>
@@ -44,7 +44,7 @@ const DownloadApp = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-8 md:absolute md:-top-12 md:right-0 md:mt-0 md:pb-0">
+              <div className="relative z-10 mt-8 md:absolute md:-top-12 md:right-0 md:mt-0 md:pb-0">
                 <Image
                   src="/mobile-hand.png"
                   alt={t('mobileAlt')}
