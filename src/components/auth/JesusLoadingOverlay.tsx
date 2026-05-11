@@ -1,10 +1,21 @@
-'use client'
+"use client"
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { createPortal } from 'react-dom'
 
-const SCENE_DURATION = 4200
+const SCENE_DURATION = 4400
+
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false)
+  useEffect(() => {
+    const fn = () => setMobile(window.innerWidth < 768)
+    fn() // set initial value on mount
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [])
+  return mobile
+}
 
 const scenes = [
   {
@@ -54,15 +65,15 @@ const scenes = [
   },
 ]
 
-//Birth
-const BirthScene = ({ accent }: { accent: string }) => {
+// ── Birth ──────────────────────────────────────────────────
+function BirthScene({ accent, isMobile = false }: { accent: string; isMobile?: boolean }) {
   return (
     <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="birth-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.06" numOctaves="4" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.06" numOctaves={isMobile ? 1 : 4} result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isMobile ? 2 : 6} xChannelSelector="R" yChannelSelector="G" />
         </filter>
         <filter id="birth-glow">
           <feGaussianBlur stdDeviation="8" result="blur" />
@@ -151,7 +162,7 @@ const BirthScene = ({ accent }: { accent: string }) => {
       </g>
 
       {/* ── SAINTS: Mary, Joseph, Wise Men ── brightness-lifted so they pop on dark bg */}
-      <g style={{ filter: 'brightness(22) sepia(0.4) saturate(2.8) contrast(1.6) drop-shadow(0 0 12px rgba(200,160,80,0.5))' }}>
+      <g style={{ filter: 'brightness(8) sepia(0.5) contrast(1.1)' }}>
 
         {/* ── SAINT MARY ── kneeling left of manger, veil draped over head */}
         <g filter="url(#birth-rough)">
@@ -215,27 +226,19 @@ const BirthScene = ({ accent }: { accent: string }) => {
           </g>
         ))}
       </g>{/* end brightness wrapper */}
-
-      {/* ✝ Golden Halos — Ethiopian Orthodox style */}
-      <motion.circle cx="188" cy="528" r="26" fill="none" stroke="#d4a030" strokeWidth="2.5" opacity="0.7"
-        animate={{ opacity: [0.5, 0.9, 0.5], r: [24, 28, 24] }} transition={{ duration: 3, repeat: Infinity }} />
-      <circle cx="188" cy="528" r="24" fill="#d4a030" opacity="0.06" />
-      <motion.circle cx="318" cy="508" r="26" fill="none" stroke="#d4a030" strokeWidth="2.5" opacity="0.65"
-        animate={{ opacity: [0.45, 0.85, 0.45], r: [24, 28, 24] }} transition={{ duration: 3.2, repeat: Infinity }} />
-      <circle cx="318" cy="508" r="24" fill="#d4a030" opacity="0.06" />
     </svg>
   )
 }
 
-// Baptism
-const BaptismScene = ({ accent }: { accent: string }) => {
+// ── Baptism ────────────────────────────────────────────────
+function BaptismScene({ accent, isMobile = false }: { accent: string; isMobile?: boolean }) {
   return (
     <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="bap-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves="3" result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="8" xChannelSelector="R" yChannelSelector="G" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves={isMobile ? 1 : 3} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 8} xChannelSelector="R" yChannelSelector="G" />
         </filter>
         <filter id="bap-blur"><feGaussianBlur stdDeviation="10" /></filter>
         <radialGradient id="baplight" cx="50%" cy="22%" r="42%">
@@ -308,7 +311,7 @@ const BaptismScene = ({ accent }: { accent: string }) => {
       ))}
 
       {/* ── ALL FIGURES ── brightness-lifted for visibility */}
-      <g style={{ filter: 'brightness(22) sepia(0.3) saturate(2.5) contrast(1.5) drop-shadow(0 0 12px rgba(138,180,208,0.45))' }}>
+      <g style={{ filter: 'brightness(9) sepia(0.4) contrast(1.1)' }}>
 
         {/* ── JESUS ── standing in Jordan, waist-deep */}
         <g filter="url(#bap-rough)">
@@ -376,27 +379,19 @@ const BaptismScene = ({ accent }: { accent: string }) => {
           </g>
         ))}
       </g>{/* end brightness wrapper */}
-
-      {/* ✝ Golden Halos — Jesus & John the Baptist */}
-      <motion.circle cx="255" cy="375" r="30" fill="none" stroke="#d4a030" strokeWidth="3" opacity="0.75"
-        animate={{ opacity: [0.5, 1, 0.5], r: [28, 33, 28] }} transition={{ duration: 2.8, repeat: Infinity }} />
-      <circle cx="255" cy="375" r="28" fill="#d4a030" opacity="0.08" />
-      <motion.circle cx="310" cy="372" r="26" fill="none" stroke="#c89830" strokeWidth="2" opacity="0.6"
-        animate={{ opacity: [0.4, 0.8, 0.4], r: [24, 28, 24] }} transition={{ duration: 3, repeat: Infinity }} />
-      <circle cx="310" cy="372" r="24" fill="#c89830" opacity="0.05" />
     </svg>
   )
 }
 
-// Ministry
-const MinistryScene = ({ accent }: { accent: string }) => {
+// ── Ministry ───────────────────────────────────────────────
+function MinistryScene({ accent, isMobile = false }: { accent: string; isMobile?: boolean }) {
   return (
     <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="min-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.07" numOctaves="4" result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="10" xChannelSelector="R" yChannelSelector="G" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.07" numOctaves={isMobile ? 1 : 4} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 10} xChannelSelector="R" yChannelSelector="G" />
         </filter>
         <filter id="min-glow"><feGaussianBlur stdDeviation="12" /></filter>
         <radialGradient id="moonhalo" cx="50%" cy="50%" r="50%">
@@ -457,7 +452,7 @@ const MinistryScene = ({ accent }: { accent: string }) => {
       <rect x="0" y="330" width="500" height="370" fill="#040810" opacity="0.75" />
 
       {/* ── ALL FIGURES ── brightness-lifted for visibility */}
-      <g style={{ filter: 'brightness(24) sepia(0.25) saturate(2.5) contrast(1.5) drop-shadow(0 0 12px rgba(208,200,160,0.45))' }}>
+      <g style={{ filter: 'brightness(10) sepia(0.3) contrast(1.2)' }}>
 
         {/* Fishing boat — dark organic shape */}
         <g filter="url(#min-rough)">
@@ -544,15 +539,15 @@ const MinistryScene = ({ accent }: { accent: string }) => {
   )
 }
 
-//Crucifixion
-const CrucifixionScene = ({ accent }: { accent: string }) => {
+// ── Crucifixion ────────────────────────────────────────────
+function CrucifixionScene({ accent, isMobile = false }: { accent: string; isMobile?: boolean }) {
   return (
     <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="cru-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.05 0.07" numOctaves="5" result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="9" xChannelSelector="R" yChannelSelector="G" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.05 0.07" numOctaves={isMobile ? 1 : 5} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 9} xChannelSelector="R" yChannelSelector="G" />
         </filter>
         <filter id="cru-glow"><feGaussianBlur stdDeviation="14" /></filter>
         <radialGradient id="cbloodmoon" cx="50%" cy="50%" r="50%">
@@ -631,7 +626,7 @@ const CrucifixionScene = ({ accent }: { accent: string }) => {
       ))}
 
       {/* ── SAINTS ── brightness-lifted so warm tones pop against black */}
-      <g style={{ filter: 'brightness(28) sepia(0.35) saturate(3) contrast(1.7) drop-shadow(0 0 14px rgba(154,32,16,0.6))' }}>
+      <g style={{ filter: 'brightness(14) sepia(0.35) contrast(1.1)' }}>
 
         {/* ── SAINT MARY (Mother of Jesus) ── kneeling at foot of center cross */}
         <g filter="url(#cru-rough)">
@@ -698,27 +693,19 @@ const CrucifixionScene = ({ accent }: { accent: string }) => {
           <ellipse cx="402" cy="535" rx="10" ry="18" fill="#080000" opacity="0.75" />
         </g>
       </g>{/* end brightness wrapper */}
-
-      {/* ✝ Golden Halos — Mary & John at the Cross */}
-      <motion.circle cx="248" cy="505" r="24" fill="none" stroke="#8a3020" strokeWidth="2.5" opacity="0.6"
-        animate={{ opacity: [0.4, 0.8, 0.4], r: [22, 26, 22] }} transition={{ duration: 3, repeat: Infinity }} />
-      <circle cx="248" cy="505" r="22" fill="#8a3020" opacity="0.06" />
-      <motion.circle cx="195" cy="490" r="24" fill="none" stroke="#8a3020" strokeWidth="2" opacity="0.55"
-        animate={{ opacity: [0.35, 0.75, 0.35], r: [22, 26, 22] }} transition={{ duration: 3.2, repeat: Infinity }} />
-      <circle cx="195" cy="490" r="22" fill="#8a3020" opacity="0.05" />
     </svg>
   )
 }
 
-//Resurrection
-const ResurrectionScene = ({ accent }: { accent: string }) => {
+// ── Resurrection ───────────────────────────────────────────
+function ResurrectionScene({ accent, isMobile = false }: { accent: string; isMobile?: boolean }) {
   return (
     <svg viewBox="0 0 500 700" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="res-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves="4" result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale="7" xChannelSelector="R" yChannelSelector="G" />
+          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves={isMobile ? 1 : 4} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 7} xChannelSelector="R" yChannelSelector="G" />
         </filter>
         <filter id="res-glow"><feGaussianBlur stdDeviation="18" /></filter>
         <filter id="res-glow2"><feGaussianBlur stdDeviation="8" /></filter>
@@ -854,7 +841,7 @@ const ResurrectionScene = ({ accent }: { accent: string }) => {
       </motion.g>
 
       {/* ── MARY MAGDALENE + GUARDS ── brightness-lifted for visibility */}
-      <g style={{ filter: 'brightness(22) sepia(0.4) saturate(2.8) contrast(1.6) drop-shadow(0 0 12px rgba(232,200,64,0.45))' }}>
+      <g style={{ filter: 'brightness(10) sepia(0.5) contrast(1.1)' }}>
 
         {/* ── MARY MAGDALENE ── approaching tomb, hand raised in amazement */}
         <g filter="url(#res-rough)">
@@ -900,7 +887,7 @@ const ResurrectionScene = ({ accent }: { accent: string }) => {
   )
 }
 
-//Film overlay components
+// ── Film overlay components ────────────────────────────────
 
 const grainA = `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='220' height='220' filter='url(%23g)' opacity='0.55'/></svg>`
 const grainB = `<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='180' height='180' filter='url(%23g)' opacity='0.45'/></svg>`
@@ -909,609 +896,363 @@ const GRAIN_B = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(grainB)}`
 
 const SCENE_COMPONENTS = [BirthScene, BaptismScene, MinistryScene, CrucifixionScene, ResurrectionScene]
 
-const GEZZEM = ['፩', '፪', '፫', '፬', '፭']
-
-const FilmScratches = () => {
-  const [scratches, setScratches] = useState<{ x: number, h: number, op: number }[]>([])
+function FilmScratches() {
+  const [scratches, setScratches] = useState<{ x: number, h: number, op: number, top: number }[]>([])
   useEffect(() => {
     const id = setInterval(() => {
-      if (Math.random() < 0.35) {
+      if (Math.random() < 0.3) {
         const n = Math.floor(Math.random() * 2) + 1
         setScratches(Array.from({ length: n }, () => ({
           x: Math.random() * 100,
+          top: Math.random() * 80,
           h: 20 + Math.random() * 60,
-          op: 0.15 + Math.random() * 0.35,
+          op: 0.12 + Math.random() * 0.28,
         })))
-        setTimeout(() => setScratches([]), 60 + Math.random() * 80)
+        setTimeout(() => setScratches([]), 55 + Math.random() * 70)
       }
-    }, 120)
+    }, 110)
     return () => clearInterval(id)
   }, [])
-
   return (
-    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
+    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden', zIndex: 6 }}>
       {scratches.map((s, i) => (
         <div key={i} style={{
-          position: 'absolute',
-          left: `${s.x}%`,
-          top: `${Math.random() * 80}%`,
-          width: '1px',
-          height: `${s.h}%`,
-          background: 'white',
-          opacity: s.op,
+          position: 'absolute', left: `${s.x}%`, top: `${s.top}%`,
+          width: '1px', height: `${s.h}%`, background: 'white', opacity: s.op,
         }} />
       ))}
     </div>
   )
 }
 
-
-// ── Divine floating particles — embers, dust, holy light motes ──
-const DivineParticles = ({ accent, sceneId }: { accent: string; sceneId: string }) => {
-  const count = 35
-  const particles = useRef(
-    Array.from({ length: count }, (_, i) => ({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: 1.5 + Math.random() * 4,
-      dur: 4 + Math.random() * 8,
-      delay: Math.random() * 5,
-      drift: (Math.random() - 0.5) * 30,
-      glow: Math.random() > 0.7,
-    }))
-  ).current
-
+function Particles({ accent }: { accent: string }) {
+  const pts = useMemo(() => Array.from({ length: 18 }, (_, i) => ({
+    id: i, x: 5 + Math.random() * 90, delay: Math.random() * 5,
+    dur: 4 + Math.random() * 5, size: 1 + Math.random() * 2.5,
+    drift: (Math.random() - 0.5) * 60,
+  })), [])
   return (
-    <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-      {particles.map((p, i) => (
-        <motion.div
-          key={`${sceneId}-${i}`}
-          initial={{ opacity: 0, y: `${p.y}%`, x: `${p.x}%` }}
-          animate={{
-            opacity: [0, 0.6 + (p.glow ? 0.35 : 0), 0.3, 0.7, 0],
-            y: [`${p.y}%`, `${p.y - 25 - Math.random() * 30}%`],
-            x: [`${p.x}%`, `${p.x + p.drift}%`],
-          }}
-          transition={{ duration: p.dur, repeat: Infinity, delay: p.delay, ease: 'easeInOut' }}
-          style={{
-            position: 'absolute',
-            width: p.size,
-            height: p.size,
-            borderRadius: '50%',
-            background: p.glow ? '#fffde8' : accent,
-            boxShadow: p.glow
-              ? `0 0 ${p.size * 3}px ${accent}, 0 0 ${p.size * 6}px ${accent}80`
-              : `0 0 ${p.size * 2}px ${accent}60`,
-            filter: p.glow ? 'blur(0.5px)' : 'none',
-          }}
+    <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 5 }}>
+      {pts.map(p => (
+        <motion.div key={p.id} style={{
+          position: 'absolute', left: `${p.x}%`, bottom: '-4%',
+          width: `${p.size}px`, height: `${p.size}px`, borderRadius: '50%',
+          background: accent, boxShadow: `0 0 ${p.size * 3}px ${accent}`,
+          willChange: 'transform,opacity',
+        }}
+          animate={{ y: [0, -(typeof window !== 'undefined' ? window.innerHeight : 800) * 0.95], x: [0, p.drift], opacity: [0, 0.9, 0.9, 0] }}
+          transition={{ duration: p.dur, delay: p.delay, repeat: Infinity, ease: 'easeOut' }}
         />
       ))}
     </div>
   )
 }
 
-// ── Chromatic aberration — RGB channel split for damaged film look ──
-const ChromaticAberration = () => {
-  const [shift, setShift] = useState({ r: 0, b: 0 })
-  useEffect(() => {
-    const id = setInterval(() => {
-      if (Math.random() < 0.12) {
-        const s = 1 + Math.random() * 2.5
-        setShift({ r: s, b: -s })
-        setTimeout(() => setShift({ r: 0, b: 0 }), 40 + Math.random() * 60)
-      }
-    }, 200)
-    return () => clearInterval(id)
-  }, [])
-
-  if (shift.r === 0) return null
+function ScanLine({ accent }: { accent: string }) {
   return (
-    <>
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'rgba(255,0,0,0.04)',
-        transform: `translateX(${shift.r}px)`,
-        mixBlendMode: 'screen',
-      }} />
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'rgba(0,0,255,0.04)',
-        transform: `translateX(${shift.b}px)`,
-        mixBlendMode: 'screen',
-      }} />
-    </>
-  )
-}
-
-// ── Atmospheric fog — parallax mist layer ──
-const AtmosphericFog = ({ accent }: { accent: string }) => (
-  <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
-    <motion.div
-      animate={{ x: ['-5%', '5%', '-5%'], opacity: [0.06, 0.14, 0.06] }}
-      transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-      style={{
-        position: 'absolute', inset: '-10%',
-        background: `radial-gradient(ellipse at 30% 70%, ${accent}18, transparent 60%),
-                     radial-gradient(ellipse at 70% 30%, ${accent}12, transparent 55%)`,
-        filter: 'blur(40px)',
-      }}
-    />
-    <motion.div
-      animate={{ x: ['3%', '-4%', '3%'], y: ['-2%', '2%', '-2%'] }}
-      transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-      style={{
-        position: 'absolute', inset: '-15%',
-        background: `radial-gradient(ellipse at 60% 80%, ${accent}10, transparent 50%)`,
-        filter: 'blur(60px)',
-      }}
-    />
-  </div>
-)
-
-// ── Cinematic letterbox bars ──
-const LetterboxBars = () => (
-  <>
-    <motion.div
-      initial={{ height: 0 }}
-      animate={{ height: '5.5vh' }}
-      transition={{ duration: 1.5, ease: 'easeOut' }}
-      style={{
-        position: 'absolute', top: 0, left: 0, right: 0,
-        background: '#000', zIndex: 20, pointerEvents: 'none',
-      }}
-    />
-    <motion.div
-      initial={{ height: 0 }}
-      animate={{ height: '5.5vh' }}
-      transition={{ duration: 1.5, ease: 'easeOut' }}
-      style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0,
-        background: '#000', zIndex: 20, pointerEvents: 'none',
-      }}
-    />
-  </>
-)
-
-// ── Typewriter verse reveal ──
-const TypewriterVerse = ({ text, accent }: { text: string; accent: string }) => {
-  const [charCount, setCharCount] = useState(0)
-  useEffect(() => {
-    setCharCount(0)
-    const id = setInterval(() => {
-      setCharCount(c => {
-        if (c >= text.length) { clearInterval(id); return c }
-        return c + 1
-      })
-    }, 35)
-    return () => clearInterval(id)
-  }, [text])
-
-  return (
-    <span>
-      {text.slice(0, charCount)}
-      {charCount < text.length && (
-        <motion.span
-          animate={{ opacity: [1, 0] }}
-          transition={{ duration: 0.5, repeat: Infinity }}
-          style={{ color: accent }}
-        >|</motion.span>
-      )}
-    </span>
-  )
-}
-
-// ── Animated scene timeline ──
-const SceneTimeline = ({ sceneIndex, accent, total }: { sceneIndex: number; accent: string; total: number }) => {
-  const [progress, setProgress] = useState(0)
-  useEffect(() => {
-    setProgress(0)
-    const start = Date.now()
-    const id = setInterval(() => {
-      const elapsed = Date.now() - start
-      setProgress(Math.min(elapsed / SCENE_DURATION, 1))
-    }, 30)
-    return () => clearInterval(id)
-  }, [sceneIndex])
-
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 22, justifyContent: 'center' }}>
-      {/* Roman numeral */}
-      <motion.span
-        key={sceneIndex}
-        initial={{ opacity: 0, x: -8 }}
-        animate={{ opacity: 0.5, x: 0 }}
-        style={{
-          fontSize: '0.6rem', color: accent, letterSpacing: '0.15em',
-          fontWeight: 600, marginRight: 4, fontFamily: 'serif',
-        }}
-      >
-        {GEZZEM[sceneIndex]}
-      </motion.span>
-
-      {/* Timeline segments */}
-      <div style={{ display: 'flex', gap: 3, alignItems: 'center' }}>
-        {Array.from({ length: total }, (_, i) => (
-          <div key={i} style={{
-            width: i === sceneIndex ? 38 : 14,
-            height: 3,
-            borderRadius: 2,
-            background: i < sceneIndex
-              ? `${accent}80`
-              : i === sceneIndex
-                ? 'rgba(255,255,255,0.15)'
-                : 'rgba(255,255,255,0.1)',
-            overflow: 'hidden',
-            position: 'relative',
-            transition: 'width 0.5s ease',
-          }}>
-            {i === sceneIndex && (
-              <motion.div
-                style={{
-                  position: 'absolute', top: 0, left: 0, bottom: 0,
-                  background: accent,
-                  boxShadow: `0 0 8px ${accent}, 0 0 3px ${accent}`,
-                  borderRadius: 2,
-                  width: `${progress * 100}%`,
-                }}
-              />
-            )}
-            {i < sceneIndex && (
-              <div style={{
-                position: 'absolute', inset: 0,
-                background: accent,
-                borderRadius: 2,
-                opacity: 0.7,
-              }} />
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Counter */}
-      <motion.span
-        key={`c-${sceneIndex}`}
-        initial={{ opacity: 0, x: 8 }}
-        animate={{ opacity: 0.35, x: 0 }}
-        style={{
-          fontSize: '0.55rem', color: 'rgba(255,255,255,0.5)',
-          letterSpacing: '0.1em', marginLeft: 4, fontFamily: 'monospace',
-        }}
-      >
-        {sceneIndex + 1}/{total}
-      </motion.span>
-    </div>
-  )
-}
-
-// ── Ambient light pulse behind text ──
-const AmbientTextGlow = ({ accent }: { accent: string }) => (
-  <motion.div
-    animate={{
-      opacity: [0.08, 0.2, 0.08],
-      scale: [0.9, 1.1, 0.9],
+    <motion.div style={{
+      position: 'absolute', left: 0, right: 0, height: '2px',
+      background: `linear-gradient(90deg, transparent 0%, ${accent}50 30%, ${accent}80 50%, ${accent}50 70%, transparent 100%)`,
+      pointerEvents: 'none', zIndex: 7, willChange: 'top',
     }}
-    transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-    style={{
-      position: 'absolute',
-      width: '120%',
-      height: '180%',
-      top: '-40%',
-      left: '-10%',
-      borderRadius: '50%',
-      background: `radial-gradient(ellipse, ${accent}30 0%, transparent 65%)`,
-      filter: 'blur(30px)',
-      pointerEvents: 'none',
-    }}
-  />
-)
+      animate={{ top: ['0%', '102%'] }}
+      transition={{ duration: 7, repeat: Infinity, ease: 'linear', repeatDelay: 1.5 }}
+    />
+  )
+}
 
-import { useAuthStore } from '@/stores/authStore'
-
-// Minimum display = at least 2 full scenes — enough to showcase the cinematic intro
-// Tune this: use `scenes.length` for full cycle, or `1` for a single scene minimum
-const MIN_DISPLAY_MS = SCENE_DURATION * 2
-
-export default function JesusLoadingOverlay() {
-  const { isLoading } = useAuthStore()
+export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?: boolean }) {
+  const [mounted, setMounted] = useState(false)
   const [sceneIndex, setSceneIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
   const [grainPos, setGrainPos] = useState({ ax: 0, ay: 0, bx: 0, by: 0 })
   const [flicker, setFlicker] = useState(1)
+  const [flash, setFlash] = useState(false)
   const flickerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const startRef = useRef<number>(Date.now())
+  const isMobile = useIsMobile()
 
-  // ── Minimum display duration logic ──
-  // When isLoading fires, we lock the overlay open for at least MIN_DISPLAY_MS
-  const [showOverlay, setShowOverlay] = useState(false)
-  const overlayStartRef = useRef<number | null>(null)
-  const pendingDismissRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  useEffect(() => { setMounted(true) }, [])
 
+  // Scene timer + smooth progress bar — rAF-based
   useEffect(() => {
-    if (isLoading && !showOverlay) {
-      // Backend started loading → show overlay, record start time
-      setShowOverlay(true)
-      overlayStartRef.current = Date.now()
-      if (pendingDismissRef.current) clearTimeout(pendingDismissRef.current)
-    } else if (!isLoading && showOverlay) {
-      // Backend finished, but ensure minimum display time
-      const elapsed = Date.now() - (overlayStartRef.current ?? Date.now())
-      const remaining = Math.max(0, MIN_DISPLAY_MS - elapsed)
-
-      if (remaining <= 0) {
-        setShowOverlay(false)
-        overlayStartRef.current = null
-      } else {
-        pendingDismissRef.current = setTimeout(() => {
-          setShowOverlay(false)
-          overlayStartRef.current = null
-        }, remaining)
+    if (!isVisible) { setSceneIndex(0); setProgress(0); return }
+    startRef.current = Date.now()
+    let raf: number
+    const tick = () => {
+      const elapsed = Date.now() - startRef.current
+      const p = Math.min(elapsed / SCENE_DURATION, 1)
+      setProgress(p)
+      if (p >= 1) {
+        setFlash(true)
+        setTimeout(() => setFlash(false), 140)
+        setSceneIndex(i => (i + 1) % scenes.length)
+        startRef.current = Date.now()
       }
+      raf = requestAnimationFrame(tick)
     }
-    return () => { if (pendingDismissRef.current) clearTimeout(pendingDismissRef.current) }
-  }, [isLoading, showOverlay])
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [isVisible])
 
+  // Grain — slower on mobile
   useEffect(() => {
-    if (!showOverlay) { setSceneIndex(0); return }
-    const interval = setInterval(() => setSceneIndex(i => (i + 1) % scenes.length), SCENE_DURATION)
-    return () => clearInterval(interval)
-  }, [showOverlay])
-
-  // Heavy grain flicker — dual layer, different frequencies
-  useEffect(() => {
-    if (!showOverlay) return
+    if (!isVisible) return
+    const ms = isMobile ? 200 : 55
     const id = setInterval(() => {
       setGrainPos({
         ax: (Math.random() - 0.5) * 40, ay: (Math.random() - 0.5) * 40,
         bx: (Math.random() - 0.5) * 30, by: (Math.random() - 0.5) * 30,
       })
-    }, 60)
+    }, ms)
     return () => clearInterval(id)
-  }, [showOverlay])
+  }, [isVisible, isMobile])
 
-  // Projector flicker — random brightness drops
+  // Projector flicker
   useEffect(() => {
-    if (!showOverlay) return
+    if (!isVisible) return
     const flick = () => {
       const r = Math.random()
-      if (r < 0.08) setFlicker(0.72)
-      else if (r < 0.18) setFlicker(0.88)
+      if (r < 0.06) setFlicker(0.7)
+      else if (r < 0.14) setFlicker(0.86)
       else setFlicker(1)
     }
-    flickerRef.current = setInterval(flick, 90)
+    flickerRef.current = setInterval(flick, 95)
     return () => { if (flickerRef.current) clearInterval(flickerRef.current) }
-  }, [showOverlay])
+  }, [isVisible])
 
-  if (!showOverlay) return null
+  if (!mounted || !isVisible) return null
 
   const scene = scenes[sceneIndex]
   const SceneComponent = SCENE_COMPONENTS[sceneIndex]
 
   return createPortal(
     <AnimatePresence>
-      <motion.div
-        key="overlay"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
+      <motion.div key="jesus-overlay"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        transition={{ duration: 0.55 }}
         style={{
-          position: 'fixed', inset: 0, zIndex: 9999,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          overflow: 'hidden',
+          position: 'fixed', inset: 0, zIndex: 9999, overflow: 'hidden',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
           filter: `brightness(${flicker})`,
+          willChange: 'filter',
+          background: '#000',
         }}
       >
-        {/* Scene background */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={scene.id}
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 1, scale: 1.1 }}
-            exit={{ opacity: 0, scale: 1 }}
-            transition={{ duration: 1.1, ease: 'easeInOut' }}
-            style={{ position: 'absolute', inset: '-12%', background: '#000' }}
-          />
-        </AnimatePresence>
+        {/* ── Cinematic letterbox bars ── */}
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '7vh', background: '#000', zIndex: 30, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: '7vh', background: '#000', zIndex: 30, pointerEvents: 'none' }} />
 
-        {/* Scene SVG */}
+        {/* ── Scene transition flash ── */}
+        {flash && (
+          <div style={{ position: 'absolute', inset: 0, background: 'white', opacity: 0.18, zIndex: 28, pointerEvents: 'none' }} />
+        )}
+
+        {/* ── Scene SVG — Ken Burns slow zoom ── */}
         <AnimatePresence mode="wait">
-          <motion.div
-            key={`svg-${scene.id}`}
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1.08 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.9 }}
-            style={{ position: 'absolute', inset: '-8%' }}
+          <motion.div key={`svg-${scene.id}`}
+            initial={{ opacity: 0, scale: 1.0 }}
+            animate={{ opacity: 1, scale: 1.1 }}
+            exit={{ opacity: 0, scale: 1.04 }}
+            transition={{ duration: 1.0, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{ position: 'absolute', inset: '-10%', willChange: 'transform,opacity' }}
           >
-            <SceneComponent accent={scene.accent} />
+            <SceneComponent accent={scene.accent} isMobile={isMobile} />
           </motion.div>
         </AnimatePresence>
 
-        {/* ★ NEW — Atmospheric fog with parallax */}
-        <AtmosphericFog accent={scene.accent} />
-
-        {/* ★ NEW — Divine floating particles */}
-        <DivineParticles accent={scene.accent} sceneId={scene.id} />
-
-        {/* Color tint overlay — scene mood */}
+        {/* ── Scene mood tint ── */}
         <AnimatePresence mode="wait">
           <motion.div key={`tint-${scene.id}`}
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 1 }}
-            style={{ position: 'absolute', inset: 0, background: scene.tint, pointerEvents: 'none', mixBlendMode: 'multiply' }} />
+            transition={{ duration: 1.1 }}
+            style={{ position: 'absolute', inset: 0, background: scene.tint, pointerEvents: 'none', mixBlendMode: 'multiply' }}
+          />
         </AnimatePresence>
 
-        {/* Grain layer A — coarse */}
+        {/* ── Floating light particles (desktop only) ── */}
+        {!isMobile && <Particles key={scene.id} accent={scene.accent} />}
+
+        {/* ── Grain layer A — coarse, fast ── */}
         <div style={{
           position: 'absolute', inset: '-20%', width: '140%', height: '140%',
           backgroundImage: `url("${GRAIN_A}")`, backgroundRepeat: 'repeat',
-          opacity: 0.28, pointerEvents: 'none',
+          opacity: isMobile ? 0.18 : 0.26, pointerEvents: 'none',
           transform: `translate(${grainPos.ax}px,${grainPos.ay}px)`,
-          mixBlendMode: 'overlay',
+          mixBlendMode: 'overlay', willChange: 'transform',
         }} />
 
-        {/* Grain layer B — fine */}
+        {/* ── Grain layer B — fine (desktop only) ── */}
+        {!isMobile && (
+          <div style={{
+            position: 'absolute', inset: '-20%', width: '140%', height: '140%',
+            backgroundImage: `url("${GRAIN_B}")`, backgroundRepeat: 'repeat',
+            opacity: 0.16, pointerEvents: 'none',
+            transform: `translate(${grainPos.bx}px,${grainPos.by}px)`,
+            mixBlendMode: 'screen', willChange: 'transform',
+          }} />
+        )}
+
+        {/* ── Halftone grid (desktop only) ── */}
+        {!isMobile && (
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)',
+            backgroundSize: '18px 18px', mixBlendMode: 'screen',
+          }} />
+        )}
+
+        {/* ── Film scratches (desktop only) ── */}
+        {!isMobile && <FilmScratches />}
+
+        {/* ── Scan line sweep ── */}
+        <ScanLine accent={scene.accent} />
+
+        {/* ── Deep cinematic vignette ── */}
         <div style={{
-          position: 'absolute', inset: '-20%', width: '140%', height: '140%',
-          backgroundImage: `url("${GRAIN_B}")`, backgroundRepeat: 'repeat',
-          opacity: 0.18, pointerEvents: 'none',
-          transform: `translate(${grainPos.bx}px,${grainPos.by}px)`,
-          mixBlendMode: 'screen',
+          position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 8,
+          background: 'radial-gradient(ellipse at 50% 50%, transparent 22%, rgba(0,0,0,0.52) 58%, rgba(0,0,0,0.93) 100%)',
         }} />
 
-        {/* Halftone dot grid */}
+        {/* ── UI content ── */}
         <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)',
-          backgroundSize: '18px 18px',
-          mixBlendMode: 'screen',
-        }} />
+          position: 'relative', zIndex: 15, textAlign: 'center',
+          padding: '0 clamp(16px,5vw,32px)', width: '100%', maxWidth: '520px',
+          marginTop: '2vh',
+        }}>
 
-        {/* Film scratches */}
-        <FilmScratches />
+          {/* Scene counter — top-right */}
+          <div style={{
+            position: 'absolute', top: '-5.5vh', right: 'clamp(16px,5vw,32px)',
+            fontFamily: 'monospace', fontSize: '0.62rem', letterSpacing: '0.35em',
+            color: 'rgba(255,255,255,0.3)', pointerEvents: 'none',
+          }}>
+            {String(sceneIndex + 1).padStart(2, '0')} <span style={{ opacity: 0.5 }}>/</span> {String(scenes.length).padStart(2, '0')}
+          </div>
 
-        {/* ★ NEW — Chromatic aberration glitch */}
-        <ChromaticAberration />
-
-        {/* Deep vignette */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse at 50% 50%, transparent 28%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.88) 100%)',
-        }} />
-
-        {/* Bottom burn — old film frame edge */}
-        <div style={{
-          position: 'absolute', bottom: 0, left: 0, right: 0, height: '80px', pointerEvents: 'none',
-          background: 'linear-gradient(to bottom, transparent, rgba(0,0,0,0.55))',
-        }} />
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '60px', pointerEvents: 'none',
-          background: 'linear-gradient(to top, transparent, rgba(0,0,0,0.45))',
-        }} />
-
-        {/* ★ NEW — Cinematic letterbox bars */}
-        <LetterboxBars />
-
-        {/* UI text */}
-        <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 28px', width: '100%', maxWidth: '480px' }}>
-          {/* ★ NEW — Ambient glow behind text */}
-          <AmbientTextGlow accent={scene.accent} />
-
-          {/* ★ UPGRADED — Ethiopian cross with slow spin */}
+          {/* Ethiopian cross — spring entrance, glow pulse */}
           <AnimatePresence mode="wait">
             <motion.div key={`cross-${scene.id}`}
-              initial={{ opacity: 0, y: -16, rotate: -90 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              exit={{ opacity: 0, y: 10, rotate: 90 }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              style={{ marginBottom: 14 }}>
-              <motion.svg
-                width="48" height="48" viewBox="0 0 40 40"
-                animate={{ filter: [`drop-shadow(0 0 4px ${scene.accent})`, `drop-shadow(0 0 12px ${scene.accent})`, `drop-shadow(0 0 4px ${scene.accent})`] }}
-                transition={{ duration: 2.5, repeat: Infinity }}
-                style={{ display: 'inline-block' }}>
-                <rect x="17" y="2" width="6" height="36" rx="1.5" fill={scene.accent} opacity="0.95" />
-                <rect x="2" y="12" width="36" height="6" rx="1.5" fill={scene.accent} opacity="0.95" />
-                <circle cx="20" cy="15" r="5" fill="none" stroke={scene.accent} strokeWidth="1.5" opacity="0.65" />
-                <circle cx="20" cy="15" r="2" fill={scene.accent} opacity="0.5" />
-                {/* Extra detail: corner diamonds */}
-                <rect x="5" y="5" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 6.5 6.5)" />
-                <rect x="32" y="5" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 33.5 6.5)" />
-                <rect x="5" y="32" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 6.5 33.5)" />
-                <rect x="32" y="32" width="3" height="3" rx="0.5" fill={scene.accent} opacity="0.3" transform="rotate(45 33.5 33.5)" />
+              initial={{ opacity: 0, scale: 0.5, rotate: -20 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.5, rotate: 20 }}
+              transition={{ duration: 0.55, type: 'spring', stiffness: 220, damping: 18 }}
+              style={{ marginBottom: 'clamp(10px,2vh,18px)' }}>
+              <motion.svg width="48" height="48" viewBox="0 0 40 40"
+                style={{ display: 'inline-block' }}
+                animate={{
+                  filter: [
+                    `drop-shadow(0 0 5px ${scene.accent}) drop-shadow(0 0 12px ${scene.accent}60)`,
+                    `drop-shadow(0 0 12px ${scene.accent}) drop-shadow(0 0 28px ${scene.accent}90)`,
+                    `drop-shadow(0 0 5px ${scene.accent}) drop-shadow(0 0 12px ${scene.accent}60)`,
+                  ]
+                }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}>
+                <rect x="17" y="2" width="6" height="36" rx="1.5" fill={scene.accent} />
+                <rect x="2" y="12" width="36" height="6" rx="1.5" fill={scene.accent} />
+                <circle cx="20" cy="15" r="5.5" fill="none" stroke={scene.accent} strokeWidth="1.5" opacity="0.6" />
+                <circle cx="20" cy="15" r="2.2" fill={scene.accent} opacity="0.5" />
               </motion.svg>
             </motion.div>
           </AnimatePresence>
 
-          {/* ★ UPGRADED — Amharic title with scale punch */}
+          {/* Amharic title — blur-in, large */}
           <AnimatePresence mode="wait">
             <motion.div key={`am-${scene.id}`}
-              initial={{ opacity: 0, y: 24, scale: 0.85 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -18, scale: 1.1 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
+              initial={{ opacity: 0, y: 32, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -24, filter: 'blur(6px)' }}
+              transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}>
               <div style={{
                 fontFamily: "'Noto Sans Ethiopic', serif",
-                fontSize: 'clamp(2.4rem,7vw,3.6rem)',
-                fontWeight: 700, lineHeight: 1.1,
+                fontSize: 'clamp(2.6rem,10vw,4.4rem)',
+                fontWeight: 700, lineHeight: 1.05,
                 color: scene.accent,
-                textShadow: `0 0 28px ${scene.accent}, 0 0 60px ${scene.accent}80, 0 0 90px ${scene.accent}40, 2px 2px 8px rgba(0,0,0,0.95)`,
-                letterSpacing: '0.06em',
-                marginBottom: 4,
+                textShadow: `0 0 28px ${scene.accent}, 0 0 60px ${scene.accent}70, 0 0 110px ${scene.accent}38, 2px 2px 14px rgba(0,0,0,0.99)`,
+                letterSpacing: '0.05em',
+                marginBottom: 'clamp(4px,1vh,8px)',
               }}>
                 {scene.amharic}
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* English subtitle */}
+          {/* English — letter-spacing slide in */}
           <AnimatePresence mode="wait">
             <motion.div key={`en-${scene.id}`}
-              initial={{ opacity: 0, letterSpacing: '0.5em' }}
+              initial={{ opacity: 0, letterSpacing: '0.6em' }}
               animate={{ opacity: 1, letterSpacing: '0.28em' }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}>
+              transition={{ duration: 0.65, delay: 0.1 }}>
               <div style={{
-                fontSize: 'clamp(0.78rem,1.8vw,0.95rem)',
-                fontWeight: 500,
-                color: 'rgba(255,255,255,0.55)',
-                letterSpacing: '0.28em',
-                textTransform: 'uppercase',
-                marginBottom: 18,
+                fontSize: 'clamp(0.62rem,2.2vw,0.85rem)', fontWeight: 600,
+                color: 'rgba(255,255,255,0.48)', letterSpacing: '0.28em',
+                textTransform: 'uppercase', marginBottom: 'clamp(12px,2.2vh,18px)',
               }}>
                 {scene.english}
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* ★ UPGRADED — Animated divider with pulse */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`div-${scene.id}`}
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: 55, opacity: 0.5 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              style={{
-                height: 1,
-                background: `linear-gradient(90deg, transparent, ${scene.accent}, transparent)`,
-                margin: '0 auto 14px',
-                boxShadow: `0 0 8px ${scene.accent}40`,
-              }}
-            />
-          </AnimatePresence>
+          {/* Animated glowing divider */}
+          <motion.div style={{
+            height: 1, margin: '0 auto clamp(10px,1.8vh,16px)',
+            background: `linear-gradient(90deg, transparent, ${scene.accent}, transparent)`,
+            boxShadow: `0 0 10px ${scene.accent}`,
+          }}
+            animate={{ width: ['30px', '56px', '30px'], opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+          />
 
-          {/* ★ UPGRADED — Verse with typewriter effect */}
+          {/* Verse — fade up with delay */}
           <AnimatePresence mode="wait">
             <motion.div key={`verse-${scene.id}`}
-              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 0.78, y: 0 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.6, delay: 0.25 }}>
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 0.85, y: 0 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}>
               <div style={{
-                fontSize: 'clamp(0.7rem,1.6vw,0.82rem)',
-                fontStyle: 'italic',
-                color: 'rgba(255,255,255,0.6)',
-                maxWidth: 340,
-                margin: '0 auto',
-                lineHeight: 1.55,
-                textShadow: '0 1px 6px rgba(0,0,0,0.9)',
+                fontSize: 'clamp(0.66rem,2vw,0.82rem)', fontStyle: 'italic',
+                color: 'rgba(255,255,255,0.65)', maxWidth: 320, margin: '0 auto',
+                lineHeight: 1.65, textShadow: '0 1px 10px rgba(0,0,0,0.98)',
               }}>
-                &ldquo;<TypewriterVerse text={scene.verseText} accent={scene.accent} />&rdquo;
+                "{scene.verseText}"
               </div>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.65 }}
-                transition={{ duration: 0.5, delay: 1.5 }}
-                style={{
-                  fontSize: 'clamp(0.6rem,1.4vw,0.7rem)',
-                  color: scene.accent,
-                  marginTop: 6,
-                  letterSpacing: '0.15em',
-                }}>
+              <div style={{
+                fontSize: 'clamp(0.56rem,1.5vw,0.68rem)', color: scene.accent, opacity: 0.72,
+                marginTop: 6, letterSpacing: '0.18em',
+              }}>
                 — {scene.verse}
-              </motion.div>
+              </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* ★ REPLACED — Animated scene timeline with roman numerals + progress */}
-          <SceneTimeline sceneIndex={sceneIndex} accent={scene.accent} total={scenes.length} />
+          {/* Scene dots */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 'clamp(18px,3vh,28px)' }}>
+            {scenes.map((_, i) => (
+              <motion.div key={i}
+                animate={{
+                  width: i === sceneIndex ? 30 : 6,
+                  background: i === sceneIndex ? scene.accent : 'rgba(255,255,255,0.18)',
+                  boxShadow: i === sceneIndex ? `0 0 12px ${scene.accent}, 0 0 22px ${scene.accent}60` : 'none',
+                }}
+                transition={{ duration: 0.38, ease: 'easeOut' }}
+                style={{ height: 5, borderRadius: 3 }}
+              />
+            ))}
+          </div>
+
+          {/* Scene progress bar — fills over SCENE_DURATION */}
+          <div style={{
+            width: 'min(200px,50vw)', margin: '10px auto 0',
+            height: 2, background: 'rgba(255,255,255,0.08)', borderRadius: 2, overflow: 'hidden',
+          }}>
+            <motion.div style={{
+              height: '100%', borderRadius: 2, originX: 0,
+              background: `linear-gradient(90deg, ${scene.accent}80, ${scene.accent})`,
+              boxShadow: `0 0 8px ${scene.accent}`,
+              scaleX: progress,
+              willChange: 'transform',
+            }} />
+          </div>
         </div>
       </motion.div>
     </AnimatePresence>,
