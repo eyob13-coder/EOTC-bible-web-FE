@@ -247,7 +247,7 @@ const resolveDailyVerseSelection = (): VerseSelection => {
   const bh = kenatToday.getBahireHasab()
   const easterEt = bh.movableFeasts.fasika.ethiopian
   const easterKenat = new Kenat({ year: easterEt.year, month: easterEt.month, day: easterEt.day })
-  
+
   const offset = kenatToday.diffInDays(easterKenat)
 
   const moveable = HOLY_WEEK_BY_EASTER_OFFSET[offset]
@@ -285,8 +285,8 @@ const resolveDailyVerseSelection = (): VerseSelection => {
   // 4.7) Fast of the Prophets (Advent): 40 days before Gena (Tahsas 29)
   const genaDate = new Kenat({ year: et.year, month: 4, day: 29 })
   // Distance from today to Gena. If Gena already passed this year, distance will be negative.
-  const daysUntilGena = genaDate.diffInDays(kenatToday) 
-  
+  const daysUntilGena = genaDate.diffInDays(kenatToday)
+
   if (daysUntilGena >= 1 && daysUntilGena <= 40) {
     const idx = (40 - daysUntilGena) % ADVENT_FAST_VERSES.length
     return { loc: ADVENT_FAST_VERSES[idx], occasion: 'Fast of the Prophets (Advent)' }
@@ -422,9 +422,9 @@ export const useDailyVerseStore = create<DailyVerseState>()(
       }),
       {
         name: 'daily-verse-storage',
-        version: 2,
+        version: 5,
         migrate: (persisted: any, version) => {
-          if (version < 2) {
+          if (version < 5) {
             return {
               ...persisted,
               verse: null,

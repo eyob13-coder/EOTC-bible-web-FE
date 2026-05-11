@@ -31,6 +31,7 @@ const PlanCard: React.FC<PlanCardProps> = ({ plan }) => {
           width={180}
           height={208}
           className="h-full w-full object-cover"
+          sizes="(max-width: 768px) 33vw, 180px"
         />
       </div>
       <div className="flex w-2/3 flex-col justify-between p-4">

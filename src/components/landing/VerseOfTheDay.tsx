@@ -238,8 +238,8 @@ const VerseOfTheDay = () => {
             alt={t('alt')}
             width={600}
             height={400}
-            priority
             className="rounded-lg shadow-lg"
+            sizes="(max-width: 768px) 100vw, 600px"
           />
         </div>
       </div>

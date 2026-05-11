@@ -48,6 +48,7 @@ const About: React.FC = () => {
               width={600}
               height={400}
               className="mb-8 h-auto w-full rounded-lg object-cover shadow-lg sm:h-96 md:mb-0"
+              sizes="(max-width: 768px) 100vw, 600px"
             />
           </div>
 
