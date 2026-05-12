@@ -20,23 +20,23 @@ type Props = {
   usePlanHref: string
 }
 
-const avatarImages = [
-  { src: '/figmaAssets/ellipse-14.png', alt: 'User' },
-  { src: '/figmaAssets/ellipse-13.png', alt: 'User' },
-  { src: '/figmaAssets/ellipse-12.png', alt: 'User' },
-]
+type AvatarData = { src: string; alt: string }
 
-type Avatar = { src: string; alt: string }
+// Shape of the populated userId from the backend
+type PlanOwner = { _id: string; name: string; avatarUrl?: string | null }
 
 export const FeaturedPlanCard = ({ plan, usePlanHref }: Props) => {
   const t = useTranslations('PlansExplore')
-  const progressText = t('dayNOfM', { n: 1, m: plan.durationInDays })
-  const progressPct = Math.max(0, Math.min(1, 1 / Math.max(1, plan.durationInDays)))
   const { user } = useAuthStore()
   const { isBookmarked, toggleBookmark, isReady } = usePlanTemplateBookmarks(user?.id)
   const [isSharing, setIsSharing] = useState(false)
-  const [displayAvatars, setDisplayAvatars] = useState<Avatar[]>(avatarImages)
-  const [extraAvatarCount, setExtraAvatarCount] = useState<number | null>(null)
+  const [displayAvatars, setDisplayAvatars] = useState<AvatarData[]>([])
+  const [extraAvatarCount, setExtraAvatarCount] = useState<number>(0)
+  const [completedDays, setCompletedDays] = useState(0)
+  const [totalDays, setTotalDays] = useState(plan.durationInDays)
+
+  const progressPct = totalDays > 0 ? Math.max(0, Math.min(1, completedDays / totalDays)) : 0
+  const progressText = t('dayNOfM', { n: Math.max(1, completedDays + 1), m: totalDays })
 
   const shareUrl = useMemo(() => {
     if (typeof window === 'undefined') return ''
@@ -56,6 +56,7 @@ export const FeaturedPlanCard = ({ plan, usePlanHref }: Props) => {
     { icon: '/figmaAssets/vector-2.svg', iconAlt: 'Shares', iconClass: 'w-[18px] h-5', value: '—' },
   ]
 
+  // Fetch real participants and progress from the backend
   useEffect(() => {
     let cancelled = false
 
@@ -67,20 +68,6 @@ export const FeaturedPlanCard = ({ plan, usePlanHref }: Props) => {
       return (durationMatches && startMatches && endMatches) || nameMatches
     }
 
-    const getOwner = (p: any) => p?.user ?? p?.owner ?? p?.createdBy ?? p?.createdByUser ?? null
-
-    const getAvatarUrl = (owner: any) =>
-      owner?.avatarUrl ??
-      owner?.photo_url ??
-      owner?.photoUrl ??
-      owner?.imageUrl ??
-      owner?.image ??
-      owner?.avatar ??
-      owner?.profileImageUrl ??
-      null
-
-    const getOwnerName = (owner: any) => owner?.name ?? owner?.username ?? owner?.first_name ?? 'User'
-
     const load = async () => {
       try {
         const res = await axiosInstance.get('/api/reading-plans', { params: { page: 1, limit: 100 } })
@@ -91,44 +78,58 @@ export const FeaturedPlanCard = ({ plan, usePlanHref }: Props) => {
           res.data?.data ??
           []
 
-        if (!Array.isArray(plans)) return
+        if (!Array.isArray(plans) || cancelled) return
 
+        // Find all plans matching this template
         const matching = plans.filter((p) => {
-          if (typeof p?.isPublic === 'boolean' && p.isPublic !== true) return false
+          if (p?.isPublic === false) return false
           return matchesTemplate(p)
         })
 
-        const owners = matching.map(getOwner).filter(Boolean)
-        const avatars = owners
-          .map((o) => {
-            const url = getAvatarUrl(o)
-            if (!url || typeof url !== 'string') return null
-            return { src: url, alt: getOwnerName(o) } satisfies Avatar
+        // Extract real participant avatars from populated userId
+        const avatars: AvatarData[] = []
+        const seenIds = new Set<string>()
+
+        matching.forEach((p: any) => {
+          // Backend populates userId as { _id, name, avatarUrl }
+          const owner: PlanOwner | null =
+            (typeof p?.userId === 'object' && p.userId !== null) ? p.userId :
+            (typeof p?.user === 'object' && p.user !== null) ? p.user : null
+
+          if (!owner || !owner._id) return
+          if (seenIds.has(owner._id)) return
+          seenIds.add(owner._id)
+
+          avatars.push({
+            src: owner.avatarUrl || '',
+            alt: owner.name || 'User',
           })
-          .filter(Boolean) as Avatar[]
-
-        const uniq = Array.from(new Map(avatars.map((a) => [a.src, a])).values())
-        if (uniq.length === 0) return
-
-        const top = uniq.slice(0, 3)
-        const filled = [...top]
-        while (filled.length < 3) {
-          filled.push(avatarImages[filled.length])
-        }
+        })
 
         if (cancelled) return
-        setDisplayAvatars(filled)
-        setExtraAvatarCount(Math.max(0, uniq.length - 3))
+        setDisplayAvatars(avatars.slice(0, 3))
+        setExtraAvatarCount(Math.max(0, avatars.length - 3))
+
+        // Find the current user's own plan for progress bar
+        const myPlan = matching.find((p: any) => {
+          const ownerId = typeof p?.userId === 'object' ? p.userId?._id : p?.userId
+          return ownerId === user?.id
+        })
+
+        if (myPlan) {
+          const readings = myPlan.dailyReadings || []
+          const completed = readings.filter((d: any) => d.isCompleted).length
+          setCompletedDays(completed)
+          setTotalDays(readings.length || plan.durationInDays)
+        }
       } catch {
-        // Not logged in or backend doesn't support it; keep mocks.
+        // Not logged in or network error — leave empty
       }
     }
 
     load()
-    return () => {
-      cancelled = true
-    }
-  }, [plan.title, plan.durationInDays, plan.startBook, plan.startChapter, plan.endBook, plan.endChapter])
+    return () => { cancelled = true }
+  }, [plan.title, plan.durationInDays, plan.startBook, plan.startChapter, plan.endBook, plan.endChapter, user?.id])
 
   const saved = isReady ? isBookmarked(plan.slug) : false
 
@@ -202,7 +203,7 @@ export const FeaturedPlanCard = ({ plan, usePlanHref }: Props) => {
               <div className="inline-flex items-center gap-1 flex-shrink-0">
                 <div className="relative w-[59px] h-1.5 bg-[#d7d5cb] dark:bg-neutral-600 rounded-sm">
                   <div
-                    className="h-1.5 bg-[#621b1c] rounded-sm"
+                    className="h-1.5 bg-[#621b1c] rounded-sm transition-all"
                     style={{ width: `${Math.round(progressPct * 59)}px` }}
                   />
                 </div>
@@ -252,42 +253,38 @@ export const FeaturedPlanCard = ({ plan, usePlanHref }: Props) => {
                 <span className="font-normal text-[#1a1a19] dark:text-neutral-100 text-sm whitespace-nowrap">{t('share')}</span>
               </button>
 
-              <TooltipProvider delayDuration={150}>
-                <div className="inline-flex items-center">
-                  {displayAvatars.map((avatar, index) => (
-                    <Tooltip key={`${avatar.src}-${index}`}>
-                      <TooltipTrigger asChild>
-                        <div className={cn('shrink-0', index > 0 && '-ml-1.5')}>
-                          <Avatar className="h-[26px] w-[26px] border border-solid border-[#ffffffb0]">
-                            <AvatarImage src={avatar.src} alt={avatar.alt} />
-                            <AvatarFallback className="text-[10px]">
-                              {getInitials(avatar.alt)}
-                            </AvatarFallback>
-                          </Avatar>
+              {displayAvatars.length > 0 && (
+                <TooltipProvider delayDuration={150}>
+                  <div className="inline-flex items-center">
+                    {displayAvatars.map((avatar, index) => (
+                      <Tooltip key={`${avatar.src}-${index}`}>
+                        <TooltipTrigger asChild>
+                          <div className={cn('shrink-0', index > 0 && '-ml-1.5')}>
+                            <Avatar className="h-[26px] w-[26px] border border-solid border-[#ffffffb0]">
+                              {avatar.src ? (
+                                <AvatarImage src={avatar.src} alt={avatar.alt} />
+                              ) : null}
+                              <AvatarFallback className="text-[10px]">
+                                {getInitials(avatar.alt)}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent className="text-xs">{avatar.alt}</TooltipContent>
+                      </Tooltip>
+                    ))}
+                    {extraAvatarCount > 0 && (
+                      <div className="w-[26px] h-[26px] -ml-1.5 flex-shrink-0">
+                        <div className="flex flex-col w-[26px] h-[26px] items-center justify-center p-[5px] rounded-[13px] bg-[linear-gradient(311deg,rgba(200,55,57,1)_0%,rgba(98,27,28,1)_100%)]">
+                          <span className="font-normal text-white text-xs leading-[10px] whitespace-nowrap">
+                            +{extraAvatarCount}
+                          </span>
                         </div>
-                      </TooltipTrigger>
-                      <TooltipContent className="text-xs">{avatar.alt}</TooltipContent>
-                    </Tooltip>
-                  ))}
-                {extraAvatarCount === null ? (
-                  <div className="w-[26px] h-[26px] -ml-1.5 flex-shrink-0">
-                    <div className="flex flex-col w-[26px] h-[26px] items-center justify-center p-[5px] rounded-[13px] bg-[linear-gradient(311deg,rgba(200,55,57,1)_0%,rgba(98,27,28,1)_100%)]">
-                      <span className="font-normal text-white text-xs leading-[10px] whitespace-nowrap">
-                        +5
-                      </span>
-                    </div>
+                      </div>
+                    )}
                   </div>
-                ) : extraAvatarCount > 0 ? (
-                  <div className="w-[26px] h-[26px] -ml-1.5 flex-shrink-0">
-                    <div className="flex flex-col w-[26px] h-[26px] items-center justify-center p-[5px] rounded-[13px] bg-[linear-gradient(311deg,rgba(200,55,57,1)_0%,rgba(98,27,28,1)_100%)]">
-                      <span className="font-normal text-white text-xs leading-[10px] whitespace-nowrap">
-                        +{extraAvatarCount}
-                      </span>
-                    </div>
-                  </div>
-                ) : null}
-                </div>
-              </TooltipProvider>
+                </TooltipProvider>
+              )}
             </div>
 
             <div className="flex-1" />

@@ -78,7 +78,7 @@ export const usePlanStore = create<PlanState>((set) => ({
     set({ isMutating: true, error: null })
 
     try {
-      const res = await axiosInstance.post('/api/reading-plans', payload)
+      const res = await axiosInstance.post('/api/reading-plans', { ...payload, isPublic: true })
 
       // Be explicit about where the plan lives in the response
       const newPlan: ReadingPlan | null = res.data?.data?.plan ?? null
@@ -148,7 +148,7 @@ export const usePlanStore = create<PlanState>((set) => ({
     try {
       const res = await axiosInstance.get(`/api/reading-plans/${id}`)
       const plan = res.data?.data?.plan || res.data?.data
-      
+
       set((state) => {
         // update the plan in the list if it exists
         const exists = state.plans.some((p) => p._id === plan._id)

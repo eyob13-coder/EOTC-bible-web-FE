@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import ReaderClient from "./reader-client";
 import { books } from "@/data/data";
+import OfflineReaderFallback from "@/components/reader/OfflineReaderFallback";
 
 async function getBookData(bookId: string) {
   const bibleDataPath = path.join(process.cwd(), "src", "data", "bible-data");
@@ -32,7 +33,14 @@ export default async function ReaderPage({
   const bookData = await getBookData(bookId);
 
   if (!bookData) {
-    return <div>Book not found</div>;
+    // Book not found on server — let the client fallback handle offline
+    return (
+      <OfflineReaderFallback bookId={bookId} chapter={chapter}>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <p className="text-gray-500 dark:text-gray-400">Book not found</p>
+        </div>
+      </OfflineReaderFallback>
+    );
   }
 
   const chapterData = bookData.chapters.find(
@@ -40,7 +48,13 @@ export default async function ReaderPage({
   );
 
   if (!chapterData) {
-    return <div>Chapter not found</div>;
+    return (
+      <OfflineReaderFallback bookId={bookId} chapter={chapter}>
+        <div className="flex min-h-[60vh] items-center justify-center">
+          <p className="text-gray-500 dark:text-gray-400">Chapter not found</p>
+        </div>
+      </OfflineReaderFallback>
+    );
   }
 
   const currentChapter = parseInt(chapter);
@@ -50,12 +64,14 @@ export default async function ReaderPage({
     currentChapter < totalChapters ? currentChapter + 1 : null;
 
   return (
-    <ReaderClient
-      bookData={bookData}
-      chapterData={chapterData}
-      prevChapter={prevChapter}
-      nextChapter={nextChapter}
-      bookId={bookId}
-    />
+    <OfflineReaderFallback bookId={bookId} chapter={chapter}>
+      <ReaderClient
+        bookData={bookData}
+        chapterData={chapterData}
+        prevChapter={prevChapter}
+        nextChapter={nextChapter}
+        bookId={bookId}
+      />
+    </OfflineReaderFallback>
   );
 }

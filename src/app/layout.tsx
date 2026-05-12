@@ -2,13 +2,14 @@ import { getLocaleFromCookie } from '@/i18n/locale'
 import { cn } from '@/lib/utils'
 import { NextIntlClientProvider } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { Abyssinica_SIL, Inter, Manrope } from 'next/font/google'
+import { Abyssinica_SIL, Inter, Manrope, Playfair_Display } from 'next/font/google'
 import Script from 'next/script'
 import { ReactNode } from 'react'
 import './globals.css'
 import { supportedLocales } from '@/i18n/routing'
 import GoogleAuthProvider from '@/components/auth/GoogleAuthProvider'
 import { ThemeProvider } from '@/components/theme-provider'
+import OfflineStatusProvider from '@/components/shared/OfflineStatusProvider'
 
 const abyssinicaFont = Abyssinica_SIL({
   subsets: ['ethiopic'],
@@ -26,6 +27,13 @@ const manropeFont = Manrope({
   subsets: ['latin'],
   variable: '--font-polysans', // Substitute for PolySans
   display: 'swap',
+})
+
+const playfairFont = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+  style: ['normal', 'italic'],
 })
 
 type Props = {
@@ -108,10 +116,12 @@ export default async function LocaleLayout({ children }: Props) {
           abyssinicaFont.variable,
           interFont.variable,
           manropeFont.variable,
+          playfairFont.variable,
         )}
       >
         <NextIntlClientProvider locale={resolvedLocale} messages={messages}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <OfflineStatusProvider />
             <GoogleAuthProvider>
               {children}
             </GoogleAuthProvider>

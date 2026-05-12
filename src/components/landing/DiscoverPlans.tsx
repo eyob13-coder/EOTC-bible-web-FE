@@ -138,11 +138,10 @@ const DiscoverPlans: React.FC<DiscoverPlansProps> = ({
                 <button
                   onClick={prevPlanPage}
                   disabled={currentPlanPage === 0}
-                  className={`rounded-lg p-2 ${
-                    currentPlanPage === 0
+                  className={`rounded-lg p-2 ${currentPlanPage === 0
                       ? 'cursor-not-allowed text-gray-300'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                    }`}
                   aria-label={t('pagination.previousPage')}
                 >
                   <ChevronLeft size={24} />
@@ -153,9 +152,8 @@ const DiscoverPlans: React.FC<DiscoverPlansProps> = ({
                     <button
                       key={i}
                       onClick={() => setCurrentPlanPage(i)}
-                      className={`h-2 w-2 rounded-full transition-all ${
-                        currentPlanPage === i ? 'w-6 bg-[#4C0E0F]' : 'bg-gray-300'
-                      }`}
+                      className={`h-2 w-2 rounded-full transition-all ${currentPlanPage === i ? 'w-6 bg-[#4C0E0F]' : 'bg-gray-300'
+                        }`}
                       aria-label={t('pagination.goToPage', { pageNumber: i + 1 })}
                     />
                   ))}
@@ -164,11 +162,10 @@ const DiscoverPlans: React.FC<DiscoverPlansProps> = ({
                 <button
                   onClick={() => nextPlanPage(totalPagesDesktop)}
                   disabled={currentPlanPage === totalPagesDesktop - 1}
-                  className={`rounded-lg p-2 ${
-                    currentPlanPage === totalPagesDesktop - 1
+                  className={`rounded-lg p-2 ${currentPlanPage === totalPagesDesktop - 1
                       ? 'cursor-not-allowed text-gray-300'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                    }`}
                   aria-label={t('pagination.nextPage')}
                 >
                   <ChevronRight size={24} />
@@ -191,11 +188,10 @@ const DiscoverPlans: React.FC<DiscoverPlansProps> = ({
                 <button
                   onClick={prevPlanPage}
                   disabled={currentPlanPage === 0}
-                  className={`rounded-lg p-2 ${
-                    currentPlanPage === 0
+                  className={`rounded-lg p-2 ${currentPlanPage === 0
                       ? 'cursor-not-allowed text-gray-300'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                    }`}
                   aria-label={t('pagination.previousPage')}
                 >
                   <ChevronLeft size={24} />
@@ -206,9 +202,8 @@ const DiscoverPlans: React.FC<DiscoverPlansProps> = ({
                     <button
                       key={i}
                       onClick={() => setCurrentPlanPage(i)}
-                      className={`h-2 w-2 rounded-full transition-all ${
-                        currentPlanPage === i ? 'w-6 bg-[#4C0E0F]' : 'bg-gray-300'
-                      }`}
+                      className={`h-2 w-2 rounded-full transition-all ${currentPlanPage === i ? 'w-6 bg-[#4C0E0F]' : 'bg-gray-300'
+                        }`}
                       aria-label={t('pagination.goToPage', { pageNumber: i + 1 })}
                     />
                   ))}
@@ -217,11 +212,10 @@ const DiscoverPlans: React.FC<DiscoverPlansProps> = ({
                 <button
                   onClick={() => nextPlanPage(totalPagesMobile)}
                   disabled={currentPlanPage === totalPagesMobile - 1}
-                  className={`rounded-lg p-2 ${
-                    currentPlanPage === totalPagesMobile - 1
+                  className={`rounded-lg p-2 ${currentPlanPage === totalPagesMobile - 1
                       ? 'cursor-not-allowed text-gray-300'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                    }`}
                   aria-label={t('pagination.nextPage')}
                 >
                   <ChevronRight size={24} />

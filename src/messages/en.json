@@ -43,7 +43,8 @@
     "login": "Login",
     "highlights": "Highlights",
     "bookmarks": "Bookmarks",
-    "community": "Community"
+    "community": "Community",
+    "offline": "Offline Access"
   },
   "Common": {
     "loading": "Loading...",
@@ -284,8 +285,8 @@
     "alt": "Verse of the day"
   },
   "Hero": {
-    "developedBy": "Developed by EOTCOpenSource >",
-    "title": "Open Source Ethiopian Bible Project",
+    "developedBy": "Developed by EOTCOpenSource ",
+    "title": "Open Source <eth>Ethiopian</eth> Bible Project",
     "description": "Explore the Ethiopian Bible's heritage. Dive into scriptures and connect with your faith.",
     "button": "Read Online",
     "appCard": {
@@ -567,7 +568,7 @@
     "weekdays": "Mon – Fri"
   },
   "PlansExplore": {
-    "heroTitle": "Guided Reading <br /> Plans for the <br /> EOTC Bible",
+    "heroTitle": "Guided Reading Plans for the EOTC Bible",
     "heroDescription": "Find a plan that fits your journey, or design one yourself to grow daily in the Word.",
     "exploreButton": "Explore Plans",
     "createButton": "Create Your Plan",

@@ -36,11 +36,13 @@ const About: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-start">
           {/* Hero Section */}
           <div className="flex h-auto w-full flex-col-reverse md:h-[430px] md:w-1/3 md:flex-col">
-            <h2 className="mb-2 text-left text-3xl font-bold text-white md:mb-4">
+            <h2 className="mb-2 w-full text-left text-[36px] font-semibold leading-[115%] tracking-[-0.03em] text-white md:mb-4 md:w-[466px]">
               {about.hero.title.line1} <br className="md:hidden" />
               {about.hero.title.line2} <br className="hidden md:block" />
               {about.hero.title.line3}{' '}
-              <span className="text-yellow-400 italic">{about.hero.title.highlight}</span>
+              <span className="font-playfair font-semibold italic tracking-[-0.03em] text-yellow-400">
+                {about.hero.title.highlight}
+              </span>
             </h2>
             <Image
               src="/unique-scriptures.png"

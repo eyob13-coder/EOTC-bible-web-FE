@@ -16,14 +16,14 @@ export default function PrivacyPolicyPage() {
 
         <div className="space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed">
           <p>
-            Welcome to the EOTC Bible (Ethiopian Orthodox Tewahedo Church Bible) platform. 
+            Welcome to the EOTC Bible (<span className='font-playfair text-yellow-400'>Ethiopian</span> Orthodox Tewahedo Church Bible) platform.
             Protecting your private information is our priority.
           </p>
 
           <section>
             <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">Information We Collect</h2>
             <p>
-              When you use our application and choose to log in via Facebook Login (or other social providers), 
+              When you use our application and choose to log in via Facebook Login (or other social providers),
               we collect basic profile information to create and manage your account. This information includes:
             </p>
             <ul className="mt-2 list-inside list-disc space-y-1 ml-2">
@@ -50,7 +50,7 @@ export default function PrivacyPolicyPage() {
             <h2 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">Information Sharing</h2>
             <p>
               <strong>We do not sell, rent, or lease your personal data to third parties.</strong>
-              Your information is kept secure and is only used to provide the core functionality 
+              Your information is kept secure and is only used to provide the core functionality
               of the EOTC Bible application.
             </p>
           </section>
@@ -66,7 +66,7 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <hr className="my-8 border-gray-200 dark:border-neutral-800" />
-          
+
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Last updated: March 2026
           </p>

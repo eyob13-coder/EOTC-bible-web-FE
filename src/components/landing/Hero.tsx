@@ -10,21 +10,29 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen w-full text-white overflow-hidden">
-      <Image 
-        src="/hero-image.png" 
-        alt="Hero Background" 
-        fill 
-        priority 
+      <Image
+        src="/hero-image.png"
+        alt="Hero Background"
+        fill
+        priority
         className="object-cover object-top -z-20"
         sizes="100vw"
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[rgba(127,29,29,0.9)] via-[rgba(127,29,29,0.7)] via-28% to-transparent"></div>
       <div className="relative container mx-auto flex h-full min-h-[766px] flex-col justify-center px-4">
         <div className="mt-48 w-full text-left md:absolute md:top-[319px] md:left-[48px] md:mt-0 md:w-[554px]">
-          <p className="inline-block rounded-full bg-[#4C0E0F]/30 px-3 text-sm text-red-100">
+          <p className="inline-block rounded-full bg-[#41101085] px-3 py-1 text-[14px] italic text-[#FFD2D2] leading-none">
             {t('developedBy')} &gt;
           </p>
-          <h1 className="mt-2 text-4xl font-bold md:text-6xl">{t('title')}</h1>
+          <h1 className="mt-2 text-[40px] font-semibold leading-[91%] tracking-[-0.03em] md:text-[84px] [text-shadow:0px_4px_7px_rgba(62,49,49,0.14)]">
+            {t.rich('title', {
+              eth: (chunks) => (
+                <span className="font-playfair font-semibold italic tracking-[-0.04em] text-yellow-400">
+                  {chunks}
+                </span>
+              )
+            })}
+          </h1>
           <p className="mt-4 text-lg">{t('description')}</p>
           <Link href="/read-online" className="mt-8 flex w-fit">
             <button className="flex items-center space-x-2 rounded-lg bg-white py-2 pr-2 pl-6 text-lg text-[#4C0E0F]">
@@ -46,27 +54,27 @@ const Hero = () => {
             </div>
             <p className="mt-2 text-sm">{t('appCard.mobileDescription')}</p>
             <div className="mt-8 flex justify-center space-x-4 md:justify-start">
-                  <div className="cursor-not-allowed opacity-50">
-                    <Image
-                      src="/google-play-badge.svg"
-                      // alt={t('googlePlayAlt')}
-                      alt="Google play badge"
-                      width={128}
-                      height={40}
-                      className="w-32 md:w-32 grayscale pointer-events-none"
-                    />
-                  </div>
-                  <div className="cursor-not-allowed opacity-50">
-                    <Image
-                      src="/app-store-badge.png"
-                      // alt={t ('appStoreAlt')}
-                      alt="App store badge"
-                      width={128}
-                      height={40}
-                      className="w-32 md:w-32 grayscale pointer-events-none"
-                    />
-                  </div>
-                </div>
+              <div className="cursor-not-allowed opacity-50">
+                <Image
+                  src="/google-play-badge.svg"
+                  // alt={t('googlePlayAlt')}
+                  alt="Google play badge"
+                  width={128}
+                  height={40}
+                  className="w-32 md:w-32 grayscale pointer-events-none"
+                />
+              </div>
+              <div className="cursor-not-allowed opacity-50">
+                <Image
+                  src="/app-store-badge.png"
+                  // alt={t ('appStoreAlt')}
+                  alt="App store badge"
+                  width={128}
+                  height={40}
+                  className="w-32 md:w-32 grayscale pointer-events-none"
+                />
+              </div>
+            </div>
           </div>
 
           {/* DESKTOP LAYOUT */}

@@ -34,6 +34,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.38.0",
     "fuse.js": "^7.1.0",
+    "idb": "^8.0.3",
     "input-otp": "^1.4.2",
     "kenat": "^3.2.0",
     "lucide-react": "^0.544.0",

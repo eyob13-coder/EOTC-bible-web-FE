@@ -1,6 +1,6 @@
 'use client'
 
-import { Book, Calendar, Home, NotebookPen, PenLine, Globe, Trophy } from 'lucide-react'
+import { Book, Calendar, Home, NotebookPen, PenLine, Globe, Trophy, Download } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -47,6 +47,10 @@ const DashboardSidebar = () => {
       <Link href="/dashboard/notes/public" className={getLinkClass('/dashboard/notes/public')}>
         <Globe size={20} />
         <p className="hidden md:block">{t('community')}</p>
+      </Link>
+      <Link href="/dashboard/offline" className={getLinkClass('/dashboard/offline')}>
+        <Download size={20} />
+        <p className="hidden md:block">{t('offline')}</p>
       </Link>
     </nav>
   )

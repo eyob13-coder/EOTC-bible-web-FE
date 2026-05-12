@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useOfflineStore } from "@/stores/offlineStore";
+import { CloudOff, CheckCircle2, Download } from "lucide-react";
 
 interface Book {
   name: string;
@@ -11,18 +13,39 @@ interface Book {
   testament: string;
 }
 
-function BookLink({ book }: { book: Book }) {
+function BookLink({ book, isDownloaded }: { book: Book; isDownloaded: boolean }) {
   return (
     <Link
       href={`/read-online/${book.id}/1`}
-      className="block px-4 py-3 text-gray-900 dark:text-gray-200 bg-white dark:bg-[#1f090a] hover:bg-gray-50 dark:hover:bg-[#4a1c1e] transition-colors border border-gray-200 dark:border-[#521c1f] rounded-md"
+      className="group block px-4 py-3 text-gray-900 dark:text-gray-200 bg-white dark:bg-[#1f090a] hover:bg-gray-50 dark:hover:bg-[#4a1c1e] transition-colors border border-gray-200 dark:border-[#521c1f] rounded-md"
     >
-      {book.name}
+      <div className="flex items-center justify-between gap-2">
+        <span>{book.name}</span>
+        {isDownloaded && (
+          <span
+            className="inline-flex items-center gap-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-400 shrink-0"
+            title="Available offline"
+          >
+            <CheckCircle2 className="h-3 w-3" />
+            <span className="hidden sm:inline">Offline</span>
+          </span>
+        )}
+      </div>
     </Link>
   );
 }
 
-function TestamentSection({ title, bookList }: { title: string; bookList: Book[] }) {
+function TestamentSection({
+  title,
+  bookList,
+  downloadedBooks,
+}: {
+  title: string;
+  bookList: Book[];
+  downloadedBooks: string[];
+}) {
+  const downloadedCount = bookList.filter((b) => downloadedBooks.includes(b.id)).length;
+
   return (
     <div className="flex-1">
       <div className="flex items-center justify-center gap-2 mb-6">
@@ -31,9 +54,21 @@ function TestamentSection({ title, bookList }: { title: string; bookList: Book[]
           {title}
         </h2>
       </div>
+      {downloadedCount > 0 && (
+        <div className="mb-3 flex items-center justify-center gap-1.5">
+          <CloudOff className="h-3.5 w-3.5 text-emerald-600 dark:text-emerald-400" />
+          <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+            {downloadedCount}/{bookList.length} available offline
+          </span>
+        </div>
+      )}
       <div className="flex flex-col gap-2">
         {bookList.map((book) => (
-          <BookLink key={book.id} book={book} />
+          <BookLink
+            key={book.id}
+            book={book}
+            isDownloaded={downloadedBooks.includes(book.id)}
+          />
         ))}
       </div>
     </div>
@@ -45,6 +80,11 @@ export default function ReadOnlinePage() {
   const [newTestament, setNewTestament] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { downloadedBooks, refreshDownloadedBooks } = useOfflineStore();
+
+  useEffect(() => {
+    refreshDownloadedBooks();
+  }, [refreshDownloadedBooks]);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -102,6 +142,20 @@ export default function ReadOnlinePage() {
           <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg">
             Explore the Ethiopian Bible with 81 books. <br className="hidden sm:block" /> Choose a book to start reading.
           </p>
+          {downloadedBooks.length > 0 ? (
+            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-3 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-400">
+              <CloudOff className="h-3.5 w-3.5" />
+              {downloadedBooks.length} book{downloadedBooks.length !== 1 ? 's' : ''} available offline
+            </div>
+          ) : (
+            <Link 
+              href="/dashboard/offline"
+              className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-[#4C0E0F]/10 dark:bg-amber-900/30 px-3 py-1 text-xs font-bold text-[#4C0E0F] dark:text-amber-400 hover:bg-[#4C0E0F]/20 dark:hover:bg-amber-900/50 transition-colors"
+            >
+              <Download className="h-3.5 w-3.5" />
+              Download for offline reading
+            </Link>
+          )}
         </div>
 
         {/* Testament Sections - Side by Side on Desktop */}
@@ -110,7 +164,8 @@ export default function ReadOnlinePage() {
           {oldTestament.length > 0 && (
             <TestamentSection 
               title="Old Testament" 
-              bookList={oldTestament} 
+              bookList={oldTestament}
+              downloadedBooks={downloadedBooks}
             />
           )}
 
@@ -118,7 +173,8 @@ export default function ReadOnlinePage() {
           {newTestament.length > 0 && (
             <TestamentSection 
               title="New Testament" 
-              bookList={newTestament} 
+              bookList={newTestament}
+              downloadedBooks={downloadedBooks}
             />
           )}
         </div>

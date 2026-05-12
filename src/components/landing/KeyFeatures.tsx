@@ -78,7 +78,7 @@ const KeyFeatures: React.FC = () => {
       title: t('feature4.title'),
       description: t('feature4.description'),
       image: '/Feature2.png',
-      link: '/dashboard',
+      link: '/dashboard/offline',
     },
     {
       title: t('feature5.title'),

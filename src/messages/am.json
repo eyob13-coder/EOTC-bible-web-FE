@@ -43,7 +43,8 @@
     "login": "ግባ",
     "highlights": "ያደመቋቸው ክፍሎች",
     "bookmarks": "የመጽሐፍ ምልክቶች",
-    "community": "ማህበረሰብ"
+    "community": "ማህበረሰብ",
+    "offline": "ያለ በይነመረብ ይድረሱ"
   },
   "Common": {
     "loading": "በማውረድ ላይ...",
@@ -285,7 +286,7 @@
   },
   "Hero": {
     "developedBy": "በ EOTCOpenSource የበለጸገ >",
-    "title": "ክፍት ምንጭ (Open Source) የሆነ የኢትዮጵያ መጽሐፍ ቅዱስ ፕሮጀክት",
+    "title": "ክፍት ማህደር የሆነ <eth>የኢትዮጵያ</eth> የመጽሐፍ ቅዱስ ፕሮጀክት",
     "description": "የኢትዮጵያን የመጽሐፍ ቅዱስ ቅርስ ያስሱ። ወደ ቅዱሳት መጻሕፍት ዘልቀው ይግቡ እና እምነትዎን ያሳድጉ።",
     "button": "ከበይነመረብ (Online) ያንብቡ",
     "appCard": {

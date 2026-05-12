@@ -116,6 +116,7 @@ export interface ReadingPlan {
   status?: 'active' | 'completed'
   isPublic?: boolean
   createdAt: string
+  userId?: string | { _id: string; name: string; avatarUrl?: string | null }
 }
 export interface ReadingPlanCreateData {
   name: string
