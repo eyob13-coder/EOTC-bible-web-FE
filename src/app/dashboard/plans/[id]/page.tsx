@@ -136,6 +136,7 @@ export default function PlanDetailPage({ params }: { params: Promise<{ id: strin
             onDayComplete={handleDayComplete}
             isLoading={isMutating}
             localReadItems={localReadItems}
+            planId={plan._id}
           />
         ) : (
           <p className="text-sm text-gray-500">No readings for this day.</p>
