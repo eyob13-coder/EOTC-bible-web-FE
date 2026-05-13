@@ -32,7 +32,8 @@ const Navbar = () => {
 
   useEffect(() => {
     loadSession()
-  }, [loadSession])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const t = useTranslations('Navigation')
   const pathname = usePathname()
