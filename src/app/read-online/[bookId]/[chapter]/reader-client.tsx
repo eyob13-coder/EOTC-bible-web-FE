@@ -14,6 +14,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import type { VerseReadEvent } from '@/hooks/useReadingTracker'
 import { useProgressStore } from '@/stores/progressStore'
 import { useReadingTracker } from '@/hooks/useReadingTracker'
+import { usePlanStore } from '@/stores/usePlanStore'
 
 interface ReaderClientProps {
   bookData: any
@@ -38,6 +39,78 @@ export default function ReaderClient({
   const { progress, markChapterRead, syncVerseReadings, flushVerseQueue } = useProgressStore()
   const [animatedVerses, setAnimatedVerses] = useState<Set<number>>(new Set())
   const [searchQuery, setSearchQuery] = useState<string | null>(null)
+
+  // Plan State
+  const planId = searchParams.get('planId')
+  const planItemId = searchParams.get('planItemId')
+  const { plans, fetchPlanById } = usePlanStore()
+
+  useEffect(() => {
+    if (planId && !plans.find((p) => p._id === planId)) {
+      fetchPlanById(planId).catch(() => {})
+    }
+  }, [planId, plans, fetchPlanById])
+
+  const currentPlan = planId ? plans.find((p) => p._id === planId) : null
+  const planDayNumber = planItemId ? parseInt(planItemId.split('-')[0], 10) : null
+
+  const planReadingItems = useMemo(() => {
+    const items: any[] = []
+    if (currentPlan && planDayNumber) {
+      const currentDayData = currentPlan.dailyReadings?.find((d) => d.dayNumber === planDayNumber)
+      if (currentDayData) {
+        currentDayData.readings.forEach((reading: any) => {
+          for (let ch = reading.startChapter; ch <= reading.endChapter; ch++) {
+            items.push({
+              id: `${currentDayData.dayNumber}-${reading.book}-${ch}`,
+              bookId: reading.book,
+              chapter: ch,
+              day: currentDayData.dayNumber,
+            })
+          }
+        })
+      }
+    }
+    return items
+  }, [currentPlan, planDayNumber])
+
+  const nextPlanItem = useMemo(() => {
+    if (!planItemId || planReadingItems.length === 0) return null
+    const idx = planReadingItems.findIndex((item) => item.id === planItemId)
+    return idx >= 0 && idx < planReadingItems.length - 1 ? planReadingItems[idx + 1] : null
+  }, [planItemId, planReadingItems])
+
+  const handlePlanNext = () => {
+    if (planItemId) {
+      try {
+        const stored = localStorage.getItem('readPlanItems')
+        const parsed = stored ? JSON.parse(stored) : {}
+        parsed[planItemId] = true
+        localStorage.setItem('readPlanItems', JSON.stringify(parsed))
+        window.dispatchEvent(new Event('localReadUpdate'))
+      } catch (e) {
+        console.error('Failed to save read items to local storage')
+      }
+    }
+
+    if (nextPlanItem) {
+      setTimeout(() => {
+        try {
+          const stored = localStorage.getItem('readPlanItems')
+          const parsed = stored ? JSON.parse(stored) : {}
+          parsed[nextPlanItem.id] = true
+          localStorage.setItem('readPlanItems', JSON.stringify(parsed))
+          window.dispatchEvent(new Event('localReadUpdate'))
+        } catch (e) {}
+      }, 3000)
+
+      router.push(
+        `/read-online/${nextPlanItem.bookId.toLowerCase()}/${nextPlanItem.chapter}?planId=${planId}&planItemId=${nextPlanItem.id}`
+      )
+    } else {
+      router.push(`/dashboard/plans/${planId}`)
+    }
+  }
 
   // ── Shared verse-selection state (lifted from VerseActionMenu) ────────────
   const [activeSection, setActiveSection] = useState<string | null>(null)
@@ -488,6 +561,20 @@ export default function ReaderClient({
             </div>
           )
         })}
+
+        {planId && planItemId && (
+          <div className="mt-8 mb-4 flex justify-center border-t border-gray-300 dark:border-gray-700 pt-6">
+            <button
+              onClick={handlePlanNext}
+              className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-[#4C0E0F] px-6 py-3 font-medium text-white transition-colors hover:bg-red-800"
+            >
+              {nextPlanItem
+                ? `Next Plan Reading: ${nextPlanItem.bookId} ${nextPlanItem.chapter}`
+                : 'Complete Plan Day'}
+              <ChevronRight size={20} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* RIGHT ARROW */}

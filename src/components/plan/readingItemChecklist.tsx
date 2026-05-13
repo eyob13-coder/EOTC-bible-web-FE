@@ -11,13 +11,15 @@ interface ReadingItemChecklistProps {
   onDayComplete: () => Promise<void>
   isLoading?: boolean
   localReadItems: Record<string, boolean>
+  planId?: string
 }
 
 export const ReadingItemChecklist = ({
   items,
   onDayComplete,
   isLoading = false,
-  localReadItems
+  localReadItems,
+  planId
 }: ReadingItemChecklistProps) => {
   const t = useTranslations('PlansExplore')
   const isDayCompleted = items.length > 0 && items[0].isCompleted
@@ -68,7 +70,7 @@ export const ReadingItemChecklist = ({
             </div>
 
             <Link
-              href={`/read-online/${bookId.toLowerCase()}/${chapter}`}
+              href={`/read-online/${bookId.toLowerCase()}/${chapter}${planId ? `?planId=${planId}&planItemId=${id}` : ''}`}
               onClick={() => markItemLocallyRead(id)}
               className="flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-gray-800 dark:text-accent-foreground transition-colors hover:bg-red-900 hover:text-white dark:hover:bg-red-900"
             >

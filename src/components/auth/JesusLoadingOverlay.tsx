@@ -72,11 +72,11 @@ function BirthScene({ accent, isMobile = false }: { accent: string; isMobile?: b
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="birth-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.06" numOctaves={isMobile ? 1 : 4} result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale={isMobile ? 2 : 6} xChannelSelector="R" yChannelSelector="G" />
+          {isMobile ? <feOffset dx="0" dy="0" /> : <><feTurbulence type="fractalNoise" baseFrequency="0.04 0.06" numOctaves={4} result="noise" />
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale={6} xChannelSelector="R" yChannelSelector="G" /></>}
         </filter>
         <filter id="birth-glow">
-          <feGaussianBlur stdDeviation="8" result="blur" />
+          <feGaussianBlur stdDeviation={isMobile ? 4 : 8} result="blur" />
           <feComposite in="SourceGraphic" in2="blur" operator="over" />
         </filter>
         <radialGradient id="bstar" cx="50%" cy="18%" r="32%">
@@ -101,15 +101,18 @@ function BirthScene({ accent, isMobile = false }: { accent: string; isMobile?: b
       <ellipse cx="250" cy="130" rx="280" ry="180" fill={accent} opacity="0.04" />
 
       {/* Scattered stars — irregular sizes, sepia-tinted */}
-      {[
-        [38, 55, 1.4], [88, 30, 0.9], [160, 48, 1.1], [295, 22, 1.6], [368, 72, 1], [345, 130, 0.8],
-        [22, 120, 1.3], [108, 88, 0.7], [318, 54, 0.9], [15, 178, 1.1], [392, 158, 0.6],
-        [265, 40, 1.2], [185, 68, 0.8], [228, 35, 1.5], [70, 160, 0.7], [430, 95, 1], [145, 22, 0.9],
-        [468, 55, 0.7], [335, 168, 1.3], [54, 200, 0.8]
-      ].map(([x, y, r], i) => (
-        <motion.circle key={i} cx={x} cy={y} r={r} fill="#e8d8b0" opacity={0.3 + (i % 6) * 0.09}
-          animate={{ opacity: [0.15 + i % 3 * 0.1, 0.6 + i % 4 * 0.08, 0.15 + i % 3 * 0.1] }}
-          transition={{ duration: 1.5 + i % 5 * 0.4, repeat: Infinity, delay: i * 0.15 }} />
+      {(isMobile
+        ? [[38, 55, 1.4], [160, 48, 1.1], [295, 22, 1.6], [345, 130, 0.8], [108, 88, 0.7], [265, 40, 1.2], [228, 35, 1.5], [430, 95, 1]]
+        : [[38, 55, 1.4], [88, 30, 0.9], [160, 48, 1.1], [295, 22, 1.6], [368, 72, 1], [345, 130, 0.8],
+           [22, 120, 1.3], [108, 88, 0.7], [318, 54, 0.9], [15, 178, 1.1], [392, 158, 0.6],
+           [265, 40, 1.2], [185, 68, 0.8], [228, 35, 1.5], [70, 160, 0.7], [430, 95, 1], [145, 22, 0.9],
+           [468, 55, 0.7], [335, 168, 1.3], [54, 200, 0.8]]
+      ).map(([x, y, r], i) => (
+        isMobile
+          ? <circle key={i} cx={x} cy={y} r={r} fill="#e8d8b0" opacity={0.3 + (i % 6) * 0.09} />
+          : <motion.circle key={i} cx={x} cy={y} r={r} fill="#e8d8b0" opacity={0.3 + (i % 6) * 0.09}
+              animate={{ opacity: [0.15 + i % 3 * 0.1, 0.6 + i % 4 * 0.08, 0.15 + i % 3 * 0.1] }}
+              transition={{ duration: 1.5 + i % 5 * 0.4, repeat: Infinity, delay: i * 0.15 }} />
       ))}
 
       {/* Star of Bethlehem — rough filter, organic glow */}
@@ -237,10 +240,10 @@ function BaptismScene({ accent, isMobile = false }: { accent: string; isMobile?:
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="bap-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves={isMobile ? 1 : 3} result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 8} xChannelSelector="R" yChannelSelector="G" />
+          {isMobile ? <feOffset dx="0" dy="0" /> : <><feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves={3} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={8} xChannelSelector="R" yChannelSelector="G" /></>}
         </filter>
-        <filter id="bap-blur"><feGaussianBlur stdDeviation="10" /></filter>
+        <filter id="bap-blur"><feGaussianBlur stdDeviation={isMobile ? 5 : 10} /></filter>
         <radialGradient id="baplight" cx="50%" cy="22%" r="42%">
           <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
           <stop offset="35%" stopColor={accent} stopOpacity="0.4" />
@@ -296,18 +299,19 @@ function BaptismScene({ accent, isMobile = false }: { accent: string; isMobile?:
       <rect x="0" y="470" width="500" height="230" fill="url(#bapwater)" />
 
       {/* Rough water surface ripples */}
-      {[470, 488, 505, 520].map((y, i) => (
-        <motion.path key={i}
-          d={`M0,${y} Q62,${y - 7} 125,${y} Q187,${y + 7} 250,${y} Q312,${y - 7} 375,${y} Q437,${y + 7} 500,${y}`}
-          fill="none" stroke={accent} strokeWidth="1" opacity={0.12 + i * 0.04}
-          animate={{
-            d: [
-              `M0,${y} Q62,${y - 7} 125,${y} Q187,${y + 7} 250,${y} Q312,${y - 7} 375,${y} Q437,${y + 7} 500,${y}`,
-              `M0,${y} Q62,${y + 7} 125,${y} Q187,${y - 7} 250,${y} Q312,${y + 7} 375,${y} Q437,${y - 7} 500,${y}`,
-              `M0,${y} Q62,${y - 7} 125,${y} Q187,${y + 7} 250,${y} Q312,${y - 7} 375,${y} Q437,${y + 7} 500,${y}`,
-            ]
-          }}
-          transition={{ duration: 2.2 + i * 0.3, repeat: Infinity, ease: 'easeInOut' }} />
+      {(isMobile ? [470, 505] : [470, 488, 505, 520]).map((y, i) => (
+        isMobile
+          ? <path key={i} d={`M0,${y} Q62,${y - 7} 125,${y} Q187,${y + 7} 250,${y} Q312,${y - 7} 375,${y} Q437,${y + 7} 500,${y}`}
+              fill="none" stroke={accent} strokeWidth="1" opacity={0.12 + i * 0.04} />
+          : <motion.path key={i}
+              d={`M0,${y} Q62,${y - 7} 125,${y} Q187,${y + 7} 250,${y} Q312,${y - 7} 375,${y} Q437,${y + 7} 500,${y}`}
+              fill="none" stroke={accent} strokeWidth="1" opacity={0.12 + i * 0.04}
+              animate={{ d: [
+                `M0,${y} Q62,${y - 7} 125,${y} Q187,${y + 7} 250,${y} Q312,${y - 7} 375,${y} Q437,${y + 7} 500,${y}`,
+                `M0,${y} Q62,${y + 7} 125,${y} Q187,${y - 7} 250,${y} Q312,${y + 7} 375,${y} Q437,${y - 7} 500,${y}`,
+                `M0,${y} Q62,${y - 7} 125,${y} Q187,${y + 7} 250,${y} Q312,${y - 7} 375,${y} Q437,${y + 7} 500,${y}`,
+              ] }}
+              transition={{ duration: 2.2 + i * 0.3, repeat: Infinity, ease: 'easeInOut' }} />
       ))}
 
       {/* ── ALL FIGURES ── brightness-lifted for visibility */}
@@ -390,10 +394,10 @@ function MinistryScene({ accent, isMobile = false }: { accent: string; isMobile?
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="min-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.07" numOctaves={isMobile ? 1 : 4} result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 10} xChannelSelector="R" yChannelSelector="G" />
+          {isMobile ? <feOffset dx="0" dy="0" /> : <><feTurbulence type="fractalNoise" baseFrequency="0.04 0.07" numOctaves={4} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={10} xChannelSelector="R" yChannelSelector="G" /></>}
         </filter>
-        <filter id="min-glow"><feGaussianBlur stdDeviation="12" /></filter>
+        <filter id="min-glow"><feGaussianBlur stdDeviation={isMobile ? 6 : 12} /></filter>
         <radialGradient id="moonhalo" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor={accent} stopOpacity="0.5" />
           <stop offset="100%" stopColor={accent} stopOpacity="0" />
@@ -433,19 +437,20 @@ function MinistryScene({ accent, isMobile = false }: { accent: string; isMobile?
         transition={{ duration: 4, repeat: Infinity, delay: 1.5 }} />
 
       {/* Churning sea — organic waves */}
-      {[340, 362, 380, 398, 415, 432].map((y, i) => (
-        <motion.path key={i}
-          d={`M0,${y} Q40,${y - 12 + i * 2} 80,${y} Q120,${y + 12 - i} 160,${y} Q200,${y - 10 + i} 240,${y} Q280,${y + 10 - i} 320,${y} Q360,${y - 11 + i} 400,${y} Q440,${y + 9 - i} 500,${y}`}
-          fill="none" stroke="#0a1520" strokeWidth={8 - i} opacity={0.7 + i * 0.05}
-          animate={{
-            d: [
-              `M0,${y} Q40,${y - 12 + i * 2} 80,${y} Q120,${y + 12 - i} 160,${y} Q200,${y - 10 + i} 240,${y} Q280,${y + 10 - i} 320,${y} Q360,${y - 11 + i} 400,${y} Q440,${y + 9 - i} 500,${y}`,
-              `M0,${y} Q40,${y + 12 - i} 80,${y} Q120,${y - 12 + i * 2} 160,${y} Q200,${y + 10 - i} 240,${y} Q280,${y - 10 + i} 320,${y} Q360,${y + 11 - i} 400,${y} Q440,${y - 9 + i} 500,${y}`,
-              `M0,${y} Q40,${y - 12 + i * 2} 80,${y} Q120,${y + 12 - i} 160,${y} Q200,${y - 10 + i} 240,${y} Q280,${y + 10 - i} 320,${y} Q360,${y - 11 + i} 400,${y} Q440,${y + 9 - i} 500,${y}`,
-            ]
-          }}
-          transition={{ duration: 1.8 + i * 0.25, repeat: Infinity, ease: 'easeInOut' }}
-        />
+      {(isMobile ? [340, 380, 415] : [340, 362, 380, 398, 415, 432]).map((y, i) => (
+        isMobile
+          ? <path key={i}
+              d={`M0,${y} Q40,${y - 12 + i * 2} 80,${y} Q120,${y + 12 - i} 160,${y} Q200,${y - 10 + i} 240,${y} Q280,${y + 10 - i} 320,${y} Q360,${y - 11 + i} 400,${y} Q440,${y + 9 - i} 500,${y}`}
+              fill="none" stroke="#0a1520" strokeWidth={8 - i} opacity={0.7 + i * 0.05} />
+          : <motion.path key={i}
+              d={`M0,${y} Q40,${y - 12 + i * 2} 80,${y} Q120,${y + 12 - i} 160,${y} Q200,${y - 10 + i} 240,${y} Q280,${y + 10 - i} 320,${y} Q360,${y - 11 + i} 400,${y} Q440,${y + 9 - i} 500,${y}`}
+              fill="none" stroke="#0a1520" strokeWidth={8 - i} opacity={0.7 + i * 0.05}
+              animate={{ d: [
+                `M0,${y} Q40,${y - 12 + i * 2} 80,${y} Q120,${y + 12 - i} 160,${y} Q200,${y - 10 + i} 240,${y} Q280,${y + 10 - i} 320,${y} Q360,${y - 11 + i} 400,${y} Q440,${y + 9 - i} 500,${y}`,
+                `M0,${y} Q40,${y + 12 - i} 80,${y} Q120,${y - 12 + i * 2} 160,${y} Q200,${y + 10 - i} 240,${y} Q280,${y - 10 + i} 320,${y} Q360,${y + 11 - i} 400,${y} Q440,${y - 9 + i} 500,${y}`,
+                `M0,${y} Q40,${y - 12 + i * 2} 80,${y} Q120,${y + 12 - i} 160,${y} Q200,${y - 10 + i} 240,${y} Q280,${y + 10 - i} 320,${y} Q360,${y - 11 + i} 400,${y} Q440,${y + 9 - i} 500,${y}`,
+              ] }}
+              transition={{ duration: 1.8 + i * 0.25, repeat: Infinity, ease: 'easeInOut' }} />
       ))}
 
       {/* Deep water fill */}
@@ -546,10 +551,10 @@ function CrucifixionScene({ accent, isMobile = false }: { accent: string; isMobi
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="cru-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.05 0.07" numOctaves={isMobile ? 1 : 5} result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 9} xChannelSelector="R" yChannelSelector="G" />
+          {isMobile ? <feOffset dx="0" dy="0" /> : <><feTurbulence type="fractalNoise" baseFrequency="0.05 0.07" numOctaves={5} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={9} xChannelSelector="R" yChannelSelector="G" /></>}
         </filter>
-        <filter id="cru-glow"><feGaussianBlur stdDeviation="14" /></filter>
+        <filter id="cru-glow"><feGaussianBlur stdDeviation={isMobile ? 7 : 14} /></filter>
         <radialGradient id="cbloodmoon" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#6a0000" />
           <stop offset="45%" stopColor="#3a0000" />
@@ -704,11 +709,11 @@ function ResurrectionScene({ accent, isMobile = false }: { accent: string; isMob
       style={{ width: '100%', height: '100%', position: 'absolute', inset: 0 }}>
       <defs>
         <filter id="res-rough">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves={isMobile ? 1 : 4} result="n" />
-          <feDisplacementMap in="SourceGraphic" in2="n" scale={isMobile ? 2 : 7} xChannelSelector="R" yChannelSelector="G" />
+          {isMobile ? <feOffset dx="0" dy="0" /> : <><feTurbulence type="fractalNoise" baseFrequency="0.035 0.05" numOctaves={4} result="n" />
+          <feDisplacementMap in="SourceGraphic" in2="n" scale={7} xChannelSelector="R" yChannelSelector="G" /></>}
         </filter>
-        <filter id="res-glow"><feGaussianBlur stdDeviation="18" /></filter>
-        <filter id="res-glow2"><feGaussianBlur stdDeviation="8" /></filter>
+        <filter id="res-glow"><feGaussianBlur stdDeviation={isMobile ? 8 : 18} /></filter>
+        <filter id="res-glow2"><feGaussianBlur stdDeviation={isMobile ? 4 : 8} /></filter>
         <radialGradient id="resburst" cx="50%" cy="58%" r="55%">
           <stop offset="0%" stopColor="#fffbe0" stopOpacity="1" />
           <stop offset="20%" stopColor={accent} stopOpacity="0.9" />
@@ -737,20 +742,25 @@ function ResurrectionScene({ accent, isMobile = false }: { accent: string; isMob
         filter="url(#res-glow)"
         animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 1.8, repeat: Infinity }} />
 
-      {/* Light rays — 24 organic rays */}
-      {Array.from({ length: 24 }, (_, i) => {
-        const angle = (i / 24) * Math.PI * 2
+      {/* Light rays — 24 on desktop, 10 on mobile */}
+      {Array.from({ length: isMobile ? 10 : 24 }, (_, i) => {
+        const total = isMobile ? 10 : 24
+        const angle = (i / total) * Math.PI * 2
         const len = 200 + (i % 5) * 55
         const x1 = 250 + Math.cos(angle) * 22
         const y1 = 408 + Math.sin(angle) * 22
         const x2 = 250 + Math.cos(angle) * len
         const y2 = 408 + Math.sin(angle) * len
         return (
-          <motion.line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-            stroke={accent} strokeWidth={i % 4 === 0 ? 2.5 : i % 2 === 0 ? 1.5 : 0.8}
-            opacity={0.18 + ((24 - i) / 24) * 0.18}
-            animate={{ opacity: [0.08, 0.38, 0.08] }}
-            transition={{ duration: 1.4 + i * 0.07, repeat: Infinity, delay: i * 0.04 }} />
+          isMobile
+            ? <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke={accent} strokeWidth={i % 4 === 0 ? 2.5 : 1.2}
+                opacity={0.22} />
+            : <motion.line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                stroke={accent} strokeWidth={i % 4 === 0 ? 2.5 : i % 2 === 0 ? 1.5 : 0.8}
+                opacity={0.18 + ((24 - i) / 24) * 0.18}
+                animate={{ opacity: [0.08, 0.38, 0.08] }}
+                transition={{ duration: 1.4 + i * 0.07, repeat: Infinity, delay: i * 0.04 }} />
         )
       })}
 
@@ -995,22 +1005,21 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
     return () => cancelAnimationFrame(raf)
   }, [isVisible])
 
-  // Grain — slower on mobile
+  // Grain — disabled on mobile to prevent re-renders
   useEffect(() => {
-    if (!isVisible) return
-    const ms = isMobile ? 200 : 55
+    if (!isVisible || isMobile) return
     const id = setInterval(() => {
       setGrainPos({
         ax: (Math.random() - 0.5) * 40, ay: (Math.random() - 0.5) * 40,
         bx: (Math.random() - 0.5) * 30, by: (Math.random() - 0.5) * 30,
       })
-    }, ms)
+    }, 55)
     return () => clearInterval(id)
   }, [isVisible, isMobile])
 
-  // Projector flicker
+  // Projector flicker — disabled on mobile
   useEffect(() => {
-    if (!isVisible) return
+    if (!isVisible || isMobile) return
     const flick = () => {
       const r = Math.random()
       if (r < 0.06) setFlicker(0.7)
@@ -1019,7 +1028,7 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
     }
     flickerRef.current = setInterval(flick, 95)
     return () => { if (flickerRef.current) clearInterval(flickerRef.current) }
-  }, [isVisible])
+  }, [isVisible, isMobile])
 
   if (!mounted || !isVisible) return null
 
@@ -1034,8 +1043,7 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
         style={{
           position: 'fixed', inset: 0, zIndex: 9999, overflow: 'hidden',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          filter: `brightness(${flicker})`,
-          willChange: 'filter',
+          ...(isMobile ? {} : { filter: `brightness(${flicker})`, willChange: 'filter' }),
           background: '#000',
         }}
       >
@@ -1073,14 +1081,14 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
         {/* ── Floating light particles (desktop only) ── */}
         {!isMobile && <Particles key={scene.id} accent={scene.accent} />}
 
-        {/* ── Grain layer A — coarse, fast ── */}
-        <div style={{
+        {/* ── Grain layer A — static on mobile, animated on desktop ── */}
+        {!isMobile && <div style={{
           position: 'absolute', inset: '-20%', width: '140%', height: '140%',
           backgroundImage: `url("${GRAIN_A}")`, backgroundRepeat: 'repeat',
-          opacity: isMobile ? 0.18 : 0.26, pointerEvents: 'none',
+          opacity: 0.26, pointerEvents: 'none',
           transform: `translate(${grainPos.ax}px,${grainPos.ay}px)`,
           mixBlendMode: 'overlay', willChange: 'transform',
-        }} />
+        }} />}
 
         {/* ── Grain layer B — fine (desktop only) ── */}
         {!isMobile && (
@@ -1105,8 +1113,8 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
         {/* ── Film scratches (desktop only) ── */}
         {!isMobile && <FilmScratches />}
 
-        {/* ── Scan line sweep ── */}
-        <ScanLine accent={scene.accent} />
+        {/* ── Scan line sweep (desktop only) ── */}
+        {!isMobile && <ScanLine accent={scene.accent} />}
 
         {/* ── Deep cinematic vignette ── */}
         <div style={{
@@ -1121,14 +1129,14 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
           marginTop: '2vh',
         }}>
 
-          {/* Scene counter — top-right */}
-          <div style={{
+          {/* Scene counter — top-right (desktop only) */}
+          {!isMobile && <div style={{
             position: 'absolute', top: '-5.5vh', right: 'clamp(16px,5vw,32px)',
             fontFamily: 'monospace', fontSize: '0.62rem', letterSpacing: '0.35em',
             color: 'rgba(255,255,255,0.3)', pointerEvents: 'none',
           }}>
             {String(sceneIndex + 1).padStart(2, '0')} <span style={{ opacity: 0.5 }}>/</span> {String(scenes.length).padStart(2, '0')}
-          </div>
+          </div>}
 
           {/* Ethiopian cross — spring entrance, glow pulse */}
           <AnimatePresence mode="wait">
@@ -1240,8 +1248,8 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
             ))}
           </div>
 
-          {/* Scene progress bar — fills over SCENE_DURATION */}
-          <div style={{
+          {/* Scene progress bar — fills over SCENE_DURATION (desktop only) */}
+          {!isMobile && <div style={{
             width: 'min(200px,50vw)', margin: '10px auto 0',
             height: 2, background: 'rgba(255,255,255,0.08)', borderRadius: 2, overflow: 'hidden',
           }}>
@@ -1252,7 +1260,7 @@ export default function JesusLoadingOverlay({ isVisible = false }: { isVisible?:
               scaleX: progress,
               willChange: 'transform',
             }} />
-          </div>
+          </div>}
         </div>
       </motion.div>
     </AnimatePresence>,
