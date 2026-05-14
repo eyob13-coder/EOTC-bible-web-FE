@@ -60,6 +60,11 @@ const Navbar = () => {
     }
   }, [isNavMenuOpen, closeNavMenu])
 
+  // Auto-close mobile menu when the route changes
+  useEffect(() => {
+    closeNavMenu()
+  }, [pathname, closeNavMenu])
+
   useEffect(() => {
     if (!isNavMenuOpen) return
 

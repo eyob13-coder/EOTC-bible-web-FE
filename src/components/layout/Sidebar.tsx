@@ -14,10 +14,12 @@ import {
 import { books, type bookType } from '@/data/data'
 import { useRouter } from 'next/navigation'
 import { useBibleStore } from '@/stores/bibleStore'
+import { useOfflineStore } from '@/stores/offlineStore'
 
 export function AppSidebar() {
   const router = useRouter()
   const { current, setCurrent, selectedTestament, setSelectedTestament } = useBibleStore()
+  const isOnline = useOfflineStore((s) => s.isOnline)
   const [isScrolling, setIsScrolling] = useState(false)
   let scrollTimeout: NodeJS.Timeout
 
@@ -29,11 +31,26 @@ export function AppSidebar() {
     }, 1000)
   }
 
+  /** Navigate to a book/chapter, falling back to offline routing when needed */
+  const navigateToReader = (bookId: string, chapter: number) => {
+    if (!isOnline) {
+      const newUrl = `/read-online/${bookId}/${chapter}`
+      window.history.pushState({}, '', newUrl)
+      window.dispatchEvent(
+        new CustomEvent('offlineNavigate', {
+          detail: { bookId, chapter: chapter.toString() },
+        })
+      )
+    } else {
+      router.push(`/read-online/${bookId}/${chapter}`)
+    }
+  }
+
   const handleBookClick = (book: bookType) => {
     const newRef = { book: book.book_name_en, chapter: 1, verseStart: 1, verseCount: 1 }
     setCurrent(newRef)
     const bookId = book.book_name_en.toLowerCase().replace(/ /g, '-')
-    router.push(`/read-online/${bookId}/1`)
+    navigateToReader(bookId, 1)
   }
 
   const handleChapterClick = (chapter: number) => {
@@ -42,7 +59,7 @@ export function AppSidebar() {
       const bookId = selectedBook.book_name_en.toLowerCase().replace(/ /g, '-')
       const newRef = { book: selectedBook.book_name_en, chapter: chapter, verseStart: 1, verseCount: 1 }
       setCurrent(newRef)
-      router.push(`/read-online/${bookId}/${chapter}`)
+      navigateToReader(bookId, chapter)
     }
   }
 
