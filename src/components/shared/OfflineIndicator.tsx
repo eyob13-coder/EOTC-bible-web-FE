@@ -35,7 +35,7 @@ export default function OfflineIndicator() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -60, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          className="fixed top-20 left-1/2 z-50 -translate-x-1/2"
+          className="fixed top-36 md:top-20 left-1/2 z-50 -translate-x-1/2"
         >
           <div className="flex items-center gap-2.5 rounded-full border border-amber-200 dark:border-amber-500/30 bg-amber-50/90 dark:bg-amber-950/90 px-5 py-2.5 shadow-xl shadow-amber-900/10 dark:shadow-amber-900/40 backdrop-blur-md">
             <WifiOff className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
@@ -55,7 +55,7 @@ export default function OfflineIndicator() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -60, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          className="fixed top-20 left-1/2 z-50 -translate-x-1/2"
+          className="fixed top-36 md:top-20 left-1/2 z-50 -translate-x-1/2"
         >
           <div className="flex items-center gap-2.5 rounded-full border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50/90 dark:bg-emerald-950/90 px-5 py-2.5 shadow-xl shadow-emerald-900/10 dark:shadow-emerald-900/40 backdrop-blur-md">
             <Wifi className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
