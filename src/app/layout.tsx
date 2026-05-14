@@ -87,6 +87,9 @@ export async function generateMetadata() {
       apple: '/logo.png',
     },
     manifest: '/manifest.json',
+    verification: {
+      google: 'VKulgItdfOdwf_AkC_1vFG6YZTOkXHies8nIdCJ9b4U',
+    },
   }
 }
 
