@@ -15,6 +15,7 @@ import type { VerseReadEvent } from '@/hooks/useReadingTracker'
 import { useProgressStore } from '@/stores/progressStore'
 import { useReadingTracker } from '@/hooks/useReadingTracker'
 import { usePlanStore } from '@/stores/usePlanStore'
+import { useOfflineStore } from '@/stores/offlineStore'
 
 interface ReaderClientProps {
   bookData: any
@@ -39,6 +40,24 @@ export default function ReaderClient({
   const { progress, markChapterRead, syncVerseReadings, flushVerseQueue } = useProgressStore()
   const [animatedVerses, setAnimatedVerses] = useState<Set<number>>(new Set())
   const [searchQuery, setSearchQuery] = useState<string | null>(null)
+  
+  const isOnline = useOfflineStore((s) => s.isOnline)
+
+  // Helper to handle offline navigation safely
+  const handleOfflineNavigation = (targetBookId: string, targetChapter: number, e?: React.MouseEvent) => {
+    if (!isOnline) {
+      if (e) e.preventDefault()
+      const newUrl = `/read-online/${targetBookId}/${targetChapter}`
+      window.history.pushState({}, '', newUrl)
+      window.dispatchEvent(
+        new CustomEvent('offlineNavigate', {
+          detail: { bookId: targetBookId, chapter: targetChapter.toString() },
+        })
+      )
+      return true // Handled offline
+    }
+    return false // Let standard Next.js routing happen
+  }
 
   // Plan State
   const planId = searchParams.get('planId')
@@ -104,9 +123,21 @@ export default function ReaderClient({
         } catch (e) {}
       }, 3000)
 
-      router.push(
-        `/read-online/${nextPlanItem.bookId.toLowerCase()}/${nextPlanItem.chapter}?planId=${planId}&planItemId=${nextPlanItem.id}`
-      )
+      const targetBookId = nextPlanItem.bookId.toLowerCase()
+      if (!isOnline) {
+        const queryParams = `?planId=${planId}&planItemId=${nextPlanItem.id}`
+        const newUrl = `/read-online/${targetBookId}/${nextPlanItem.chapter}${queryParams}`
+        window.history.pushState({}, '', newUrl)
+        window.dispatchEvent(
+          new CustomEvent('offlineNavigate', {
+            detail: { bookId: targetBookId, chapter: nextPlanItem.chapter.toString() },
+          })
+        )
+      } else {
+        router.push(
+          `/read-online/${targetBookId}/${nextPlanItem.chapter}?planId=${planId}&planItemId=${nextPlanItem.id}`
+        )
+      }
     } else {
       router.push(`/dashboard/plans/${planId}`)
     }
@@ -387,10 +418,14 @@ export default function ReaderClient({
     const isRightSwipe = distance < -minSwipeDistance
 
     if (isLeftSwipe && nextChapter) {
-      router.push(`/read-online/${bookId}/${nextChapter}`)
+      if (!handleOfflineNavigation(bookId, nextChapter)) {
+        router.push(`/read-online/${bookId}/${nextChapter}`)
+      }
     }
     if (isRightSwipe && prevChapter) {
-      router.push(`/read-online/${bookId}/${prevChapter}`)
+      if (!handleOfflineNavigation(bookId, prevChapter)) {
+        router.push(`/read-online/${bookId}/${prevChapter}`)
+      }
     }
   }
 
@@ -495,6 +530,7 @@ export default function ReaderClient({
         {prevChapter ? (
           <Link
             href={`/read-online/${bookId}/${prevChapter}`}
+            onClick={(e) => handleOfflineNavigation(bookId, prevChapter, e)}
             className="block rounded-md bg-gray-200 dark:bg-gray-300 p-2 hover:bg-gray-300 dark:hover:bg-white text-black transition-colors"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -587,6 +623,7 @@ export default function ReaderClient({
         {nextChapter ? (
           <Link
             href={`/read-online/${bookId}/${nextChapter}`}
+            onClick={(e) => handleOfflineNavigation(bookId, nextChapter, e)}
             className="block rounded-md bg-gray-200 dark:bg-gray-300 p-2 hover:bg-gray-300 dark:hover:bg-white text-black transition-colors"
           >
             <ChevronRight className="h-6 w-6" />

@@ -36,6 +36,11 @@ export default function OfflineReaderFallback({
 }: OfflineReaderFallbackProps) {
   const isOnline = useOfflineStore((s) => s.isOnline)
   const downloadedBooks = useOfflineStore((s) => s.downloadedBooks)
+  
+  // Local state for routing when offline
+  const [offlineBookId, setOfflineBookId] = useState(bookId)
+  const [offlineChapter, setOfflineChapter] = useState(chapter)
+  
   const [offlineData, setOfflineData] = useState<{
     bookData: any
     chapterData: any
@@ -45,8 +50,43 @@ export default function OfflineReaderFallback({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const isBookCached = downloadedBooks.includes(bookId)
-  const chapterNum = parseInt(chapter, 10)
+  const isBookCached = downloadedBooks.includes(offlineBookId)
+  const chapterNum = parseInt(offlineChapter, 10)
+
+  // Sync state with props when online (Next.js navigation works)
+  useEffect(() => {
+    if (isOnline) {
+      setOfflineBookId(bookId)
+      setOfflineChapter(chapter)
+    }
+  }, [isOnline, bookId, chapter])
+
+  // Handle offline navigation events emitted by ReaderClient
+  useEffect(() => {
+    const handleOfflineNavigate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ bookId?: string; chapter?: string }>
+      if (customEvent.detail.bookId) setOfflineBookId(customEvent.detail.bookId)
+      if (customEvent.detail.chapter) setOfflineChapter(customEvent.detail.chapter)
+    }
+
+    const handlePopState = () => {
+      if (!useOfflineStore.getState().isOnline) {
+        // Fallback popstate handling if offline: extract from URL
+        const match = window.location.pathname.match(/\/read-online\/([^/]+)\/([^/]+)/)
+        if (match) {
+          setOfflineBookId(match[1])
+          setOfflineChapter(match[2])
+        }
+      }
+    }
+
+    window.addEventListener('offlineNavigate', handleOfflineNavigate)
+    window.addEventListener('popstate', handlePopState)
+    return () => {
+      window.removeEventListener('offlineNavigate', handleOfflineNavigate)
+      window.removeEventListener('popstate', handlePopState)
+    }
+  }, [])
 
   // When offline, try to load from IndexedDB
   useEffect(() => {
@@ -101,7 +141,7 @@ export default function OfflineReaderFallback({
     return () => {
       cancelled = true
     }
-  }, [isOnline, isBookCached, bookId, chapterNum])
+  }, [isOnline, isBookCached, offlineBookId, chapterNum])
 
   // ── Online: render server content normally ──
   if (isOnline && !offlineData) {
@@ -141,7 +181,7 @@ export default function OfflineReaderFallback({
           chapterData={offlineData.chapterData}
           prevChapter={offlineData.prevChapter}
           nextChapter={offlineData.nextChapter}
-          bookId={bookId}
+          bookId={offlineBookId}
         />
       </div>
     )
