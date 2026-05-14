@@ -5,7 +5,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useUserStore } from '@/lib/stores/useUserStore'
 import LogoutButton from '../LogoutButton'
 import Link from 'next/link'
-import { Moon, Sun, Settings, User, Menu, Book, Calendar, Home, NotebookPen, PenLine, Globe } from 'lucide-react'
+import { Moon, Sun, Settings, User, Menu, Book, Calendar, Home, NotebookPen, PenLine, Globe, CloudOff } from 'lucide-react'
 import { LanguageSelector } from '../shared/language-selector'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
@@ -101,6 +101,9 @@ export default function Navbar() {
               </Link>
               <Link href="/dashboard/notes/public" className={`rounded-xl p-2 w-10 h-10 flex flex-shrink-0 items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-800 transition-colors ${pathname === '/dashboard/notes/public' ? 'text-primary' : 'text-foreground'}`}>
                 <Globe size={20} strokeWidth={pathname === '/dashboard/notes/public' ? 2.5 : 1.5} />
+              </Link>
+              <Link href="/dashboard/offline" className={`rounded-xl p-2 w-10 h-10 flex flex-shrink-0 items-center justify-center hover:bg-gray-200 dark:hover:bg-neutral-800 transition-colors ${pathname === '/dashboard/offline' ? 'text-primary' : 'text-foreground'}`}>
+                <CloudOff size={20} strokeWidth={pathname === '/dashboard/offline' ? 2.5 : 1.5} />
               </Link>
             </div>
 

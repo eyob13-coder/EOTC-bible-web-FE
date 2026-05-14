@@ -1,6 +1,13 @@
 import { withSentryConfig } from '@sentry/nextjs';
 import { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
+import withSerwistInit from '@serwist/next'
+
+const withSerwist = withSerwistInit({
+  swSrc: 'src/app/sw.ts',
+  swDest: 'public/sw.js',
+  disable: process.env.NODE_ENV === 'development',
+});
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -24,7 +31,7 @@ const nextConfig: NextConfig = {
 
 const withNextIntl = createNextIntlPlugin()
 
-export default withSentryConfig(withNextIntl(nextConfig), {
+export default withSentryConfig(withSerwist(withNextIntl(nextConfig)), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 

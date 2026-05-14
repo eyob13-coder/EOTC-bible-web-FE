@@ -13,24 +13,10 @@ interface Book {
   testament: string;
 }
 
-function BookLink({ book, isDownloaded, isOnline }: { book: Book; isDownloaded: boolean; isOnline: boolean }) {
-  const handleClick = (e: React.MouseEvent) => {
-    if (!isOnline) {
-      e.preventDefault()
-      const newUrl = `/read-online/${book.id}/1`
-      window.history.pushState({}, '', newUrl)
-      window.dispatchEvent(
-        new CustomEvent('offlineNavigate', {
-          detail: { bookId: book.id, chapter: '1' },
-        })
-      )
-    }
-  }
-
+function BookLink({ book, isDownloaded }: { book: Book; isDownloaded: boolean }) {
   return (
     <Link
       href={`/read-online/${book.id}/1`}
-      onClick={handleClick}
       className="group block px-4 py-3 text-gray-900 dark:text-gray-200 bg-white dark:bg-[#1f090a] hover:bg-gray-50 dark:hover:bg-[#4a1c1e] transition-colors border border-gray-200 dark:border-[#521c1f] rounded-md"
     >
       <div className="flex items-center justify-between gap-2">
@@ -53,12 +39,10 @@ function TestamentSection({
   title,
   bookList,
   downloadedBooks,
-  isOnline,
 }: {
   title: string;
   bookList: Book[];
   downloadedBooks: string[];
-  isOnline: boolean;
 }) {
   const downloadedCount = bookList.filter((b) => downloadedBooks.includes(b.id)).length;
 
@@ -84,7 +68,6 @@ function TestamentSection({
             key={book.id}
             book={book}
             isDownloaded={downloadedBooks.includes(book.id)}
-            isOnline={isOnline}
           />
         ))}
       </div>
@@ -184,7 +167,6 @@ export default function ReadOnlinePage() {
               title="Old Testament" 
               bookList={oldTestament}
               downloadedBooks={downloadedBooks}
-              isOnline={isOnline}
             />
           )}
 
@@ -194,7 +176,6 @@ export default function ReadOnlinePage() {
               title="New Testament" 
               bookList={newTestament}
               downloadedBooks={downloadedBooks}
-              isOnline={isOnline}
             />
           )}
         </div>

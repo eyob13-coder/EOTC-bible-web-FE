@@ -44,6 +44,10 @@ export function generateStaticParams() {
   return supportedLocales.locales.map((locale) => ({ locale }))
 }
 
+export const viewport = {
+  themeColor: '#4C0E0F',
+}
+
 export async function generateMetadata() {
   const locale = await getLocaleFromCookie()
 
@@ -51,7 +55,7 @@ export async function generateMetadata() {
   const t = await getTranslations('Index')
 
   return {
-    metadataBase: new URL('https://eotcbible.org'),
+    metadataBase: new URL('https://nehemiah-osc.org'),
     title: t('title'),
     description: t('description'),
     openGraph: {
@@ -65,7 +69,7 @@ export async function generateMetadata() {
           alt: 'EOTC Bible',
         },
       ],
-      url: 'https://eotcbible.org',
+      url: 'https://nehemiah-osc.org',
       siteName: t('siteName'),
       locale: locale,
       type: 'website',
@@ -82,6 +86,7 @@ export async function generateMetadata() {
       shortcut: '/logo.png',
       apple: '/logo.png',
     },
+    manifest: '/manifest.json',
   }
 }
 
