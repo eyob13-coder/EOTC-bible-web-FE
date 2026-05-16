@@ -15,9 +15,11 @@ import { books, type bookType } from '@/data/data'
 import { useRouter } from 'next/navigation'
 import { useBibleStore } from '@/stores/bibleStore'
 import { useOfflineStore } from '@/stores/offlineStore'
+import { useLocale } from 'next-intl'
 
 export function AppSidebar() {
   const router = useRouter()
+  const locale = useLocale()
   const { current, setCurrent, selectedTestament, setSelectedTestament } = useBibleStore()
   const isOnline = useOfflineStore((s) => s.isOnline)
   const [isScrolling, setIsScrolling] = useState(false)
@@ -133,13 +135,13 @@ export function AppSidebar() {
                 {filteredBooks.map((book) => (
                   <SidebarMenuItem key={book.book_number}>
                     <SidebarMenuButton
-                      className={`rounded-none p-4 py-5 text-base ${current.book === book.book_name_am
+                      className={`rounded-none p-4 py-5 text-base ${current.book === book.book_name_en
                         ? 'bg-[#F2EFE8] dark:bg-neutral-800 text-[#1A1A19] dark:text-white'
                         : 'bg-[#FFFDF6] dark:bg-transparent hover:bg-[#F2EFE8] dark:hover:bg-neutral-800/50 hover:text-[#1A1A19] dark:text-gray-400 dark:hover:text-gray-200'
                         }`}
                       onClick={() => handleBookClick(book)}
                     >
-                      {book.book_name_am}
+                      {locale === 'am' ? book.book_name_am : book.book_name_en}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

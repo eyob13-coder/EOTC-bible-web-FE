@@ -6,6 +6,7 @@ import { Search, ArrowLeft, BookOpen, Filter } from 'lucide-react'
 import { searchBibleWithCounts } from '@/lib/bible-search'
 import type { SearchResult } from '@/lib/search-types'
 import { books } from '@/data/data'
+import { useLocale } from 'next-intl'
 
 interface BookCount {
   count: number
@@ -16,6 +17,7 @@ interface BookCount {
 const SearchPageContent = () => {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const locale = useLocale()
   const query = searchParams.get('q') || ''
 
   const [results, setResults] = useState<SearchResult[]>([])
@@ -151,7 +153,7 @@ const SearchPageContent = () => {
               <option value="">All Books</option>
               {getFilteredBooks().map((book) => (
                 <option key={book.book_number} value={book.book_number}>
-                  {book.book_name_en}
+                  {locale === 'am' ? book.book_name_am : book.book_name_en}
                 </option>
               ))}
             </select>
@@ -247,11 +249,16 @@ const SearchPageContent = () => {
                         <div className="flex items-center justify-between">
                           <div>
                             <div className="text-lg font-semibold text-[#4C0E0F] dark:text-red-400">
-                              {result.book_name_en}
+                              {locale === 'am' && result.book_name_am ? result.book_name_am : result.book_name_en}
                             </div>
-                            {result.book_name_am && (
+                            {result.book_name_am && locale !== 'am' && (
                               <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
                                 {result.book_name_am}
+                              </div>
+                            )}
+                            {result.book_name_en && locale === 'am' && (
+                              <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                {result.book_name_en}
                               </div>
                             )}
                           </div>
@@ -265,7 +272,7 @@ const SearchPageContent = () => {
                         <div className="space-y-2">
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="font-bold text-[#4C0E0F] dark:text-red-400">
-                              {result.book_name_en} {result.chapter}:{result.verse}
+                              {locale === 'am' && result.book_name_am ? result.book_name_am : result.book_name_en} {result.chapter}:{result.verse}
                             </span>
                             {result.section_title && (
                               <span className="rounded bg-red-50 px-2 py-0.5 text-xs text-red-700 dark:bg-red-900/30 dark:text-red-400">

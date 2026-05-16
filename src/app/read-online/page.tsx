@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useOfflineStore } from "@/stores/offlineStore";
 import { CloudOff, CheckCircle2, Download } from "lucide-react";
+import { useLocale } from "next-intl";
 
 interface Book {
   name: string;
@@ -14,13 +15,14 @@ interface Book {
 }
 
 function BookLink({ book, isDownloaded }: { book: Book; isDownloaded: boolean }) {
+  const locale = useLocale();
   return (
     <Link
       href={`/read-online/${book.id}/1`}
       className="group block px-4 py-3 text-gray-900 dark:text-gray-200 bg-white dark:bg-[#1f090a] hover:bg-gray-50 dark:hover:bg-[#4a1c1e] transition-colors border border-gray-200 dark:border-[#521c1f] rounded-md"
     >
       <div className="flex items-center justify-between gap-2">
-        <span>{book.name}</span>
+        <span>{locale === 'am' ? book.nameAm : book.name}</span>
         {isDownloaded && (
           <span
             className="inline-flex items-center gap-1 rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-400 shrink-0"
