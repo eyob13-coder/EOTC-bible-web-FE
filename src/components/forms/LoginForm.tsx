@@ -50,7 +50,7 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="min-w-md space-y-1 p-4">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-1 p-4">
       <h2 className="my-0 py-0 text-2xl font-semibold dark:text-white">{t('title')}</h2>
       <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
         {t('noAccount')}{' '}

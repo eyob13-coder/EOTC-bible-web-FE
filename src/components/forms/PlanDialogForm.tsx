@@ -155,7 +155,7 @@ export const PlanDialogForm: React.FC<PlanDialogFormProps> = ({
 }) => {
   const t = useTranslations('PlanForm')
   const locale = useLocale()
-  
+
   const {
     open,
     setOpen,
@@ -200,7 +200,7 @@ export const PlanDialogForm: React.FC<PlanDialogFormProps> = ({
           </Button>
         )}
 
-        <DialogContent aria-describedby={`${initialData ? 'edit' : 'new'}-plan-desc`} className='sm:max-w-2xl'>
+        <DialogContent aria-describedby={`${initialData ? 'edit' : 'new'}-plan-desc`} className='sm:max-w-2xl max-h-[90vh] overflow-y-auto'>
           <DialogHeader>
             <DialogTitle>{initialData ? t('editPlan') : t('createPlan')}</DialogTitle>
             <p id={`${initialData ? 'edit' : 'new'}-plan-desc`} className="text-muted-foreground text-sm">{t('fillDetails')}</p>
