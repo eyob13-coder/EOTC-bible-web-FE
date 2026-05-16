@@ -60,8 +60,36 @@ export async function generateMetadata() {
 
   return {
     metadataBase: new URL('https://nehemiah-osc.org'),
-    title: t('title'),
+    title: {
+      default: t('title'),
+      template: '%s | EOTC Bible',
+    },
     description: t('description'),
+    keywords: [
+      'Ethiopian Bible',
+      'EOTC Bible',
+      'Ethiopian Orthodox Bible',
+      'Tewahedo Bible',
+      'Amharic Bible',
+      "Ge'ez Bible",
+      'Tigrigna Bible',
+      'Oromiffa Bible',
+      '81 books Bible',
+      'Book of Enoch',
+      'Book of Jubilees',
+      'Ethiopian Orthodox Tewahedo Church',
+      'የኢትዮጵያ ኦርቶዶክስ መጽሐፍ ቅዱስ',
+      'መጽሐፍ ቅዱስ',
+      'read Bible online free',
+    ],
+    alternates: {
+      canonical: 'https://nehemiah-osc.org',
+      languages: {
+        'en': 'https://nehemiah-osc.org',
+        'am': 'https://nehemiah-osc.org',
+        'x-default': 'https://nehemiah-osc.org',
+      },
+    },
     openGraph: {
       title: t('title'),
       description: t('description'),
