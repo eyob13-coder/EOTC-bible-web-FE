@@ -5,6 +5,26 @@ import { books } from "@/data/data";
 import OfflineReaderFallback from "@/components/reader/OfflineReaderFallback";
 import type { Metadata } from "next";
 
+export async function generateStaticParams(): Promise<
+  { bookId: string; chapter: string }[]
+> {
+  const params: { bookId: string; chapter: string }[] = [];
+
+  books.forEach((book) => {
+    const bookId = book.book_name_en
+      .replace(/ /g, "-")
+      .toLowerCase();
+
+    for (let chapter = 1; chapter <= book.chapters; chapter++) {
+      params.push({
+        bookId,
+        chapter: chapter.toString(),
+      });
+    }
+  });
+
+  return params;
+}
 async function getBookData(bookId: string) {
   const bibleDataPath = path.join(process.cwd(), "src", "data", "bible-data");
   try {
